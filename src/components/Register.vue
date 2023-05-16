@@ -40,7 +40,7 @@ export default {
     methods: {
         registerUser() {
             let data = {
-                name: this.user.title,
+                name: this.user.name,
                 email: this.user.email,
                 password: this.user.password,
                 confirm_password: this.user.password
