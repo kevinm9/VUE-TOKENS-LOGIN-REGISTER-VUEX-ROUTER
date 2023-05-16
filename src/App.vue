@@ -9,6 +9,12 @@
         <li class="nav-item">
           <router-link to="/add" class="nav-link">Add</router-link>
         </li>
+        <li class="nav-item">
+          <router-link to="/login" class="nav-link">login</router-link>
+        </li>
+        <li class="nav-item">
+          <router-link to="/register" class="nav-link">register</router-link>
+        </li>
       </div>
     </nav>
 

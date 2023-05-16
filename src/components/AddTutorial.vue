@@ -52,7 +52,7 @@ export default {
   },
   methods: {
     saveTutorial() {
-      var data = {
+      let data = {
         title: this.tutorial.title,
         description: this.tutorial.description
       };

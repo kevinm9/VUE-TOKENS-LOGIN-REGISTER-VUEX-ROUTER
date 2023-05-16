@@ -21,35 +21,35 @@
       </div>
     </form>
 
-    <button class="badge badge-primary mr-2"
+    <button class="btn btn-sm btn-primary mr-2"
       v-if="currentTutorial.published"
       @click="updatePublished(false)"
     >
       UnPublish
     </button>
-    <button v-else class="badge badge-primary mr-2"
+    
+    <button v-else class="btn btn-sm btn-primary mr-4"
       @click="updatePublished(true)"
     >
       Publish
     </button>
 
-    <button class="badge badge-danger mr-2"
+    <button class="btn btn-sm btn-danger mr-4"
       @click="deleteTutorial"
     >
       Delete
     </button>
 
-    <button type="submit" class="badge badge-success"
+    <button type="submit" class="btn btn-sm btn-success"
       @click="updateTutorial"
     >
       Update
     </button>
-    <p>{{ message }}</p>
   </div>
 
   <div v-else>
     <br />
-    <p>Please click on a Tutorial...</p>
+    <p>No data...</p>
   </div>
 </template>
 
@@ -61,14 +61,13 @@ export default {
   data() {
     return {
       currentTutorial: null,
-      message: ''
     };
   },
   methods: {
     getTutorial(id) {
       TutorialDataService.get(id)
         .then(response => {
-          this.currentTutorial = response.data;
+          this.currentTutorial = response.data.data;
           console.log(response.data);
         })
         .catch(e => {
@@ -77,7 +76,7 @@ export default {
     },
 
     updatePublished(status) {
-      var data = {
+      let data = {
         id: this.currentTutorial.id,
         title: this.currentTutorial.title,
         description: this.currentTutorial.description,
@@ -98,7 +97,7 @@ export default {
       TutorialDataService.update(this.currentTutorial.id, this.currentTutorial)
         .then(response => {
           console.log(response.data);
-          this.message = 'The tutorial was updated successfully!';
+          this.$router.push({ name: "tutorials" });        
         })
         .catch(e => {
           console.log(e);
@@ -117,7 +116,6 @@ export default {
     }
   },
   mounted() {
-    this.message = '';
     this.getTutorial(this.$route.params.id);
   }
 };

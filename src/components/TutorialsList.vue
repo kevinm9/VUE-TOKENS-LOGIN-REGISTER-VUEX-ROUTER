@@ -2,12 +2,9 @@
   <div class="list row">
     <div class="col-md-8">
       <div class="input-group mb-3">
-        <input type="text" class="form-control" placeholder="Search by title"
-          v-model="title"/>
+        <input @keyup="searchTitle" type="text" class="form-control" placeholder="Search by title" v-model="title" />
         <div class="input-group-append">
-          <button class="btn btn-outline-secondary" type="button"
-            @click="searchTitle"
-          >
+          <button class="btn btn-outline-secondary" type="button" @click="searchTitle">
             Search
           </button>
         </div>
@@ -16,15 +13,14 @@
     <div class="col-md-6">
       <h4>Tutorials List</h4>
       <ul class="list-group">
-        <li class="list-group-item"
-          :class="{ active: index == currentIndex }"
-          v-for="(tutorial, index) in tutorials"
-          :key="index"
-          @click="setActiveTutorial(tutorial, index)"
-        >
+        <li class="list-group-item " :class="{ active: index == currentIndex }" v-for="(tutorial, index) in tutorials"
+          :key="index" @click="setActiveTutorial(tutorial, index)">
           {{ tutorial.title }}
         </li>
       </ul>
+      <div v-if="tutorials.length < 1">
+        there is no data :C
+      </div>
 
       <button class="m-3 btn btn-sm btn-danger" @click="removeAllTutorials">
         Remove All
@@ -43,7 +39,7 @@
           <label><strong>Status:</strong></label> {{ currentTutorial.published ? "Published" : "Pending" }}
         </div>
 
-        <router-link :to="'/tutorials/' + currentTutorial.id" class="badge badge-warning">Edit</router-link>
+        <router-link :to="'/tutorials/' + currentTutorial.id" class="btn btn-sm btn-success">Edit</router-link>
       </div>
       <div v-else>
         <br />
@@ -62,7 +58,7 @@ export default {
     return {
       tutorials: [],
       currentTutorial: null,
-      currentIndex: -1,
+      currentIndex: null,
       title: ""
     };
   },
@@ -81,12 +77,17 @@ export default {
     refreshList() {
       this.retrieveTutorials();
       this.currentTutorial = null;
-      this.currentIndex = -1;
+      this.currentIndex = null;
     },
 
     setActiveTutorial(tutorial, index) {
       this.currentTutorial = tutorial;
       this.currentIndex = index;
+    },
+
+    removeActiveTutorial() {
+      this.currentTutorial = null;
+      this.currentIndex = null;
     },
 
     removeAllTutorials() {
@@ -99,17 +100,27 @@ export default {
           console.log(e);
         });
     },
-    
+
+
     searchTitle() {
-      TutorialDataService.findByTitle(this.title)
-        .then(response => {
-          this.tutorials = response.data;
-          console.log(response.data);
-        })
-        .catch(e => {
-          console.log(e);
-        });
+      if (this.timer) {
+        clearTimeout(this.timer);
+        this.timer = null;
+      }
+      this.timer = setTimeout(() => {
+        TutorialDataService.findByTitle(this.title)
+          .then(response => {
+            this.tutorials = response.data;
+            console.log(response.data);
+          })
+          .catch(e => {
+            console.log(e);
+          });
+      }, 800);
+      this.removeActiveTutorial()
     }
+
+
   },
   mounted() {
     this.retrieveTutorials();
