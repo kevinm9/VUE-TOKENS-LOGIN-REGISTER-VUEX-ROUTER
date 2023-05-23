@@ -1,31 +1,30 @@
 <template>
-  <div id="app">
-    <nav class="navbar navbar-expand navbar-dark bg-dark">
-      <router-link to="/" class="navbar-brand">bezKoder</router-link>
-      <div class="navbar-nav mr-auto">
-        <li class="nav-item">
-          <router-link to="/tutorials" class="nav-link">Tutorials</router-link>
-        </li>
-        <li class="nav-item">
-          <router-link to="/add" class="nav-link">Add</router-link>
-        </li>
-        <li class="nav-item">
-          <router-link to="/login" class="nav-link">login</router-link>
-        </li>
-        <li class="nav-item">
-          <router-link to="/register" class="nav-link">register</router-link>
-        </li>
-      </div>
-    </nav>
-
-    <div class="container mt-3">
-      <router-view />
-    </div>
+  <div id="app" >
+      <Navbar/>
+      <router-view/>
   </div>
 </template>
 
 <script>
+import Navbar from './components/NavBar'
+import AuthService from './services/auth.service';
+
 export default {
-  name: "app"
+  name: "app",
+  components: {
+    Navbar
+  },
+  computed: {
+    loggedIn() {
+      return this.$store.state.auth;
+    },
+  },
+  methods: {
+    logout(event) {
+      event.preventDefault()
+      AuthService.logout();
+      location.reload();
+    }
+  }
 };
 </script>
