@@ -23,14 +23,23 @@ export const auth = {
       );
     },
     logout({ commit }) {
-      AuthService.logout();
+      AuthService.logout().then(
+        response => {
+          commit('logout');
+          return Promise.resolve(response);
+        },
+        error => {
+          commit('logout');
+          return Promise.reject(error);
+        }
+      );
       commit('logout');
     },
     register({ commit }, user) {
       return AuthService.register(user).then(
         response => {
           commit('registerSuccess');
-          return Promise.resolve(response.data);
+          return Promise.resolve(response);
         },
         error => {
           commit('registerFailure');

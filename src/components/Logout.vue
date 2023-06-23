@@ -1,16 +1,16 @@
 <script>
-import AuthService from '../services/auth.service';
 export default {
     name: "user-logout",
     methods: {
         logout() {
-            AuthService.logoutapi().then(response => {
-                console.log(response);
-                //response.data.data;
-            })
-                .catch(e => {
-                    console.log(e);
-                });
+            this.$store.dispatch('auth/logout').then(
+                () => {
+                    this.$router.push("login");
+                },
+                error => {
+                    console.log(error);
+                }
+            );
         }
     },
     mounted() {
