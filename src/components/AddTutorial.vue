@@ -60,7 +60,6 @@ export default {
       TutorialDataService.create(data)
         .then(response => {
           this.tutorial.id = response.data.id;
-          console.log(response.data);
           this.submitted = true;
         })
         .catch(e => {

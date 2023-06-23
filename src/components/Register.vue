@@ -75,10 +75,9 @@ export default {
     methods: {
         registerUser() {
             UserService.register(this.user)
-                .then(response => {
-                    console.log(response.data);
-                    this.newuser();
-                })
+                .then(
+                    this.newuser()
+                )
                 .catch(e => {
                     console.log(e);
                 });

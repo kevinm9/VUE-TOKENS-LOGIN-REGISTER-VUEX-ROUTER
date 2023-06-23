@@ -43,10 +43,14 @@ Vue.use(VueRouter);
     },
     {
       path: "/dashboard",
-      alias: "dashboard",
       name: "dashboard",
       component: () => import("../components/Dashboard")
-    }
+    },
+    {
+      path: "/logout",
+      name: "logout",
+      component: () => import("../components/Logout")
+    },
   ]
 });
 

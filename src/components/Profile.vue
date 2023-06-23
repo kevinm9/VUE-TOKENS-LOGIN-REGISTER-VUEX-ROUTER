@@ -3,6 +3,10 @@
     {{loggedIn}}
     <br>
     {{data}}
+    <br>
+    token sin getters de vuex:
+    <br>
+    {{token}}
   </div>
 </template>
 
@@ -19,13 +23,16 @@ export default {
     loggedIn() {
       //return this.$store.state.auth.user;
       return this.$store.getters['auth/user'];
+    },
+    token() {
+      //return this.$store.state.auth.user;
+      return this.$store.state.auth.user.token;
     }
   },methods: {
   registerUser() {
     AuthService.getUser(this.user)
                 .then(response => {
                   this.data = response.data.data;
-                    console.log(response.data);
                 })
                 .catch(e => {
                     console.log(e);

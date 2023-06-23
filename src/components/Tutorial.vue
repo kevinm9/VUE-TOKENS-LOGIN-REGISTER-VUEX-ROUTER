@@ -68,7 +68,6 @@ export default {
       TutorialDataService.get(id)
         .then(response => {
           this.currentTutorial = response.data.data;
-          console.log(response.data);
         })
         .catch(e => {
           console.log(e);
@@ -84,10 +83,9 @@ export default {
       };
 
       TutorialDataService.update(this.currentTutorial.id, data)
-        .then(response => {
-          this.currentTutorial.published = status;
-          console.log(response.data);
-        })
+        .then( 
+          this.currentTutorial.published = status
+        )
         .catch(e => {
           console.log(e);
         });
@@ -95,10 +93,9 @@ export default {
 
     updateTutorial() {
       TutorialDataService.update(this.currentTutorial.id, this.currentTutorial)
-        .then(response => {
-          console.log(response.data);
-          this.$router.push({ name: "tutorials" });        
-        })
+        .then(
+          this.$router.push({ name: "tutorials" })      
+        )
         .catch(e => {
           console.log(e);
         });
@@ -106,10 +103,9 @@ export default {
 
     deleteTutorial() {
       TutorialDataService.delete(this.currentTutorial.id)
-        .then(response => {
-          console.log(response.data);
-          this.$router.push({ name: "tutorials" });
-        })
+        .then(
+          this.$router.push({ name: "tutorials" })
+        )
         .catch(e => {
           console.log(e);
         });

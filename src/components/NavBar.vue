@@ -3,11 +3,11 @@
 
     <router-link to="/" class="navbar-brand" >
       <img src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" width="30" height="30" class="d-inline-block align-top" alt="">
-      Bootstrap
+      HOME
     </router-link>
 
     <ul class="navbar-nav mr-auto">
-      <div v-if="loggedIn">
+      <template v-if="loggedIn">
       <li class="nav-item">
         <router-link to="/tutorials" class="nav-link">Tutorials</router-link>
       </li>
@@ -20,14 +20,14 @@
       <li class="nav-item">
         <router-link to="/dashboard" class="nav-link">dashboard</router-link>
       </li>
-      </div>
+      </template>
     </ul>
 
     <ul class="nav navbar-nav navbar-right">
       <li class="nav-item" v-if="!loggedIn">
         <router-link to="/login" class="nav-link"><i class="bi bi-person-fill"></i> login</router-link>
       </li>
-      <li class="nav-item">
+      <li class="nav-item" v-if="!loggedIn">
         <router-link to="/register" class="nav-link"><i class="bi bi-person-plus"></i> register</router-link>
       </li>
       <li class="nav-item" v-if="loggedIn">
@@ -39,15 +39,21 @@
 </template>
 
 <script>
+import AuthService from '../services/auth.service';
+
+
 export default {
   name: "nav-bar",
   computed: {
     loggedIn() {
-      return this.$store.state.auth.token;
+      return this.$store.state.auth.user?.token;
     },
   },
   methods: {
-    logout() {
+    logout(event) {
+      event.preventDefault()
+      AuthService.logout();
+      location.reload();
     }
   }
 };

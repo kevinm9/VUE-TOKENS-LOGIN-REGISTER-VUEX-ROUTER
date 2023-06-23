@@ -65,7 +65,7 @@ export default {
                 this.loading=true;
                 this.$store.dispatch('auth/login', this.user).then(
                     () => {
-                    location.reload();
+                    this.$router.push("profile");
                     },
                     error => {
                     this.loading = false;
