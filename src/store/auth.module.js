@@ -23,7 +23,7 @@ export const auth = {
       );
     },
     logout({ commit }) {
-      AuthService.logout().then(
+      return AuthService.logout().then(
         response => {
           commit('logout');
           return Promise.resolve(response);
@@ -33,7 +33,6 @@ export const auth = {
           return Promise.reject(error);
         }
       );
-      commit('logout');
     },
     register({ commit }, user) {
       return AuthService.register(user).then(

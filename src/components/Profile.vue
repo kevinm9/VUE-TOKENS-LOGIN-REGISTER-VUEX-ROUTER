@@ -1,12 +1,12 @@
 <template>
   <div>
-    {{loggedIn}}
+    {{ loggedIn }}
     <br>
-    {{data}}
+    {{ data }}
     <br>
     token sin getters de vuex:
     <br>
-    {{token}}
+    {{ token }}
   </div>
 </template>
 
@@ -15,10 +15,10 @@ import AuthService from '../services/auth.service';
 export default {
   name: "user-profile",
   data() {
-        return {
-            data: "",
-        };
-    },
+    return {
+      data: "",
+    };
+  },
   computed: {
     loggedIn() {
       //return this.$store.state.auth.user;
@@ -28,15 +28,15 @@ export default {
       //return this.$store.state.auth.user;
       return this.$store.state.auth.user.token;
     }
-  },methods: {
-  registerUser() {
-    AuthService.getUser(this.user)
-                .then(response => {
-                  this.data = response.data.data;
-                })
-                .catch(e => {
-                    console.log(e);
-                });
+  }, methods: {
+    registerUser() {
+      AuthService.getUser(this.user)
+        .then(response => {
+          this.data = response.data.data;
+        })
+        .catch(e => {
+          console.log(e);
+        });
     }
   },
   mounted() {

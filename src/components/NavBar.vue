@@ -31,7 +31,7 @@
         <router-link to="/register" class="nav-link"><i class="bi bi-person-plus"></i> register</router-link>
       </li>
       <li class="nav-item" v-if="loggedIn">
-        <a role="button"  href="/logout" @click="logout" class="nav-link"><i class="bi bi-x-octagon"></i> salir</a>
+        <router-link to="/logout" class="nav-link"><i class="bi bi-x-octagon"></i> salir</router-link>
       </li>
     </ul>
 
@@ -39,9 +39,6 @@
 </template>
 
 <script>
-import AuthService from '../services/auth.service';
-
-
 export default {
   name: "nav-bar",
   computed: {
@@ -49,13 +46,6 @@ export default {
       return this.$store.state.auth.user?.token;
     },
   },
-  methods: {
-    logout(event) {
-      event.preventDefault()
-      AuthService.logout();
-      location.reload();
-    }
-  }
 };
 </script>
 <style scoped>

@@ -2,17 +2,16 @@ import api from "./api.service";
 
 class AuthService {
   login(user) {
-    return api.post("/login",user)
+    return api.post("/login", user)
       .then((response) => {
         return response.data.data;
       })
   }
-  
+
   logout() {
-    return api.get("/logout").then((response) => {
-      return response.data;
-    });
+    return api.get("/logout")
   }
+
 
   getUser() {
     return api.get("/user");
