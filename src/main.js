@@ -5,7 +5,9 @@ import store from "./store";
 import setupInterceptors from './services/setupInterceptors';
 Vue.config.productionTip = false
 setupInterceptors(store);
+import vuetify from './plugins/vuetify'
 new Vue({
+  vuetify,
   router,
   store,
   render: h => h(App),

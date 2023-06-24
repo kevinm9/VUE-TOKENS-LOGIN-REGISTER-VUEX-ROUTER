@@ -1,18 +1,27 @@
 <template>
-  <div v-if="currentTutorial" class="edit-form">
+  <div
+    v-if="currentTutorial"
+    class="edit-form"
+  >
     <h4>Tutorial</h4>
     <form>
       <div class="form-group">
         <label for="title">Title</label>
-        <input type="text" class="form-control" id="title"
+        <input
+          id="title"
           v-model="currentTutorial.title"
-        />
+          type="text"
+          class="form-control"
+        >
       </div>
       <div class="form-group">
         <label for="description">Description</label>
-        <input type="text" class="form-control" id="description"
+        <input
+          id="description"
           v-model="currentTutorial.description"
-        />
+          type="text"
+          class="form-control"
+        >
       </div>
 
       <div class="form-group">
@@ -21,26 +30,32 @@
       </div>
     </form>
 
-    <button class="btn btn-sm btn-primary mr-2"
+    <button
       v-if="currentTutorial.published"
+      class="btn btn-sm btn-primary mr-2"
       @click="updatePublished(false)"
     >
       UnPublish
     </button>
     
-    <button v-else class="btn btn-sm btn-primary mr-4"
+    <button
+      v-else
+      class="btn btn-sm btn-primary mr-4"
       @click="updatePublished(true)"
     >
       Publish
     </button>
 
-    <button class="btn btn-sm btn-danger mr-4"
+    <button
+      class="btn btn-sm btn-danger mr-4"
       @click="deleteTutorial"
     >
       Delete
     </button>
 
-    <button type="submit" class="btn btn-sm btn-success"
+    <button
+      type="submit"
+      class="btn btn-sm btn-success"
       @click="updateTutorial"
     >
       Update
@@ -48,7 +63,7 @@
   </div>
 
   <div v-else>
-    <br />
+    <br>
     <p>No data...</p>
   </div>
 </template>
@@ -62,6 +77,9 @@ export default {
     return {
       currentTutorial: null,
     };
+  },
+  mounted() {
+    this.getTutorial(this.$route.params.id);
   },
   methods: {
     getTutorial(id) {
@@ -110,9 +128,6 @@ export default {
           console.log(e);
         });
     }
-  },
-  mounted() {
-    this.getTutorial(this.$route.params.id);
   }
 };
 </script>

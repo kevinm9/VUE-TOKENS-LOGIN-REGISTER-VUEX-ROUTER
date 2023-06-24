@@ -13,7 +13,7 @@
 <script>
 import AuthService from '../services/auth.service';
 export default {
-  name: "user-profile",
+  name: "UserProfile",
   data() {
     return {
       data: "",
@@ -28,6 +28,9 @@ export default {
       //return this.$store.state.auth.user;
       return this.$store.state.auth.user.token;
     }
+  },
+  mounted() {
+    this.registerUser();
   }, methods: {
     registerUser() {
       AuthService.getUser(this.user)
@@ -38,9 +41,6 @@ export default {
           console.log(e);
         });
     }
-  },
-  mounted() {
-    this.registerUser();
   }
 };
 </script>

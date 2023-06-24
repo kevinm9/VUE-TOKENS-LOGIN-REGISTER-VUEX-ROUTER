@@ -1,19 +1,24 @@
 <template>
-    <div class="px-4 py-5 my-5 text-center">
-        <div class="col-lg-6 mx-auto">
-        <div class="hollow-dots-spinner mx-auto">
-            <div class="dot"></div>
-            <div class="dot"></div>
-            <div class="dot"></div>
-        </div>
+  <div class="px-4 py-5 my-5 text-center">
+    <div class="col-lg-6 mx-auto">
+      <div class="hollow-dots-spinner mx-auto">
+        <div class="dot" />
+        <div class="dot" />
+        <div class="dot" />
+      </div>
     </div>
-    <h1 class="display-5 fw-bold text-body-emphasis">saliendo del sistema</h1>
-    </div>
+    <h1 class="display-5 fw-bold text-body-emphasis">
+      saliendo del sistema
+    </h1>
+  </div>
 </template>
 
 <script>
 export default {
-    name: "user-logout",
+    name: "UserLogout",
+    mounted() {
+        this.logout();
+    },
     methods: {
         logout() {
             this.$store.dispatch('auth/logout').then(
@@ -25,9 +30,6 @@ export default {
                 }
             )
         }
-    },
-    mounted() {
-        this.logout();
     }
 };
 </script>

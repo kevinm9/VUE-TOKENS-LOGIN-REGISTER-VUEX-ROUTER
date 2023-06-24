@@ -12,44 +12,44 @@ Vue.use(VueRouter);
       path: "/",
       alias: "/tutorials",
       name: "tutorials",
-      component: () => import("../components/TutorialsList")
+      component: () => import("../components/TutorialsList.vue")
     },
     {
       path: "/tutorials/:id",
       name: "tutorial-details",
-      component: () => import("../components/Tutorial")
+      component: () => import("../components/Tutorial.vue")
     },
     {
       path: "/add",
       name: "add",
-      component: () => import("../components/AddTutorial")
+      component: () => import("../components/AddTutorial.vue")
     },
     {
       path: "/login",
       name: "login",
       meta: { title: "Sign In" },
-      component: () => import("../components/Login")
+      component: () => import("../components/Login.vue")
     },
     {
       path: "/profile",
       name: "profile",
       //meta: { title: "profile", roles: ["SUPER_ADMIN","ADMIN"] },
-      component: () => import("../components/Profile")
+      component: () => import("../components/Profile.vue")
     },
     {
       path: "/register",
       name: "register",
-      component: () => import("../components/Register")
+      component: () => import("../components/Register.vue")
     },
     {
       path: "/dashboard",
       name: "dashboard",
-      component: () => import("../components/Dashboard")
+      component: () => import("../components/Dashboard.vue")
     },
     {
       path: "/logout",
       name: "logout",
-      component: () => import("../components/Logout")
+      component: () => import("../components/Logout.vue")
     },
   ]
 });
@@ -64,7 +64,7 @@ router.beforeEach((to, from, next) => {
     document.title = "SPA VUE";
   }
 
-  const publicPages = ['/login', '/register'];
+  const publicPages = ['/login', '/register', '/dashboard'];
   const authRequired = !publicPages.includes(to.path);
   //const rutaProtegida = to.matched.some(record => record.meta.requireAuth);
   if (authRequired && !store.state.auth.user?.token) {
