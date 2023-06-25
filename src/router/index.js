@@ -3,8 +3,6 @@ import VueRouter  from "vue-router";
 import store from "../store";
 Vue.use(VueRouter);
 
-//export const router = new Router({
-//export default new Router({
   const router = new VueRouter({
   mode: "history",
   routes: [
