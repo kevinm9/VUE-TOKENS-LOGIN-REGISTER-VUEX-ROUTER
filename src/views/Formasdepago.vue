@@ -1,8 +1,6 @@
 <template>
   <v-app>
 
-
-
 <v-card elevation="6" class="mx-auto m-4" outlined
     max-width="344">
   <v-card-title>
@@ -102,11 +100,12 @@ sdfsdf
     </v-dialog>
 
   </v-app>
+
 </template>
 <style scoped></style>
 <script>
 
-import ModalForm from '@/components/ModalFormTutorial.vue'
+import ModalForm from '@/components/FormFormasdepago.vue'
 import ModalForm2 from '@/components/AddTutorial.vue'
 import axios from "axios";
 export default {
@@ -127,7 +126,7 @@ export default {
       headers: [
         { text: "ID", value: "id", sortable: true },
         { text: "titulo", value: "title" },
-        { text: "description", value: "description" },
+        { text: "description", value: "nombre" },
         { text: "published", value: "published" },
         { text: "created_at", value: "created_at" },
         { text: 'Actions', value: 'actions', sortable: false },
@@ -150,7 +149,7 @@ export default {
       this.loading = true;
       const { sortBy, sortDesc, page, itemsPerPage } = this.options
       let urlsortDesc = sortDesc[0] ? 'asc' : 'desc';
-      axios.get("http://127.0.0.1:8000/api/tutorials?per_page=" +
+      axios.get("http://127.0.0.1:8000/api/formasdepagos?per_page=" +
         itemsPerPage +
         "&page=" +
         page +
@@ -165,7 +164,7 @@ export default {
         this.items = response.data.data;
         this.totalitem = response.data.total;
       }).catch((error)=>{
-        console.log(error.toJSON());
+        console.log(error);
         this.loading = false;
       });
     },

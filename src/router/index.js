@@ -13,6 +13,16 @@ Vue.use(VueRouter);
       component: () => import("../components/TutorialsList.vue")
     },
     {
+      path: "/formasdepagos",
+      name: "formasdepagos",
+      component: () => import("../views/Formasdepago.vue")
+    },
+    {
+      path: "/productos",
+      name: "productos",
+      component: () => import("../views/Productos.vue")
+    },
+    {
       path: "/tutorials/:id",
       name: "tutorial-details",
       component: () => import("../components/Tutorial.vue")
@@ -62,7 +72,7 @@ router.beforeEach((to, from, next) => {
     document.title = "SPA VUE";
   }
 
-  const publicPages = ['/login', '/register', '/dashboard'];
+  const publicPages = ['/login', '/register', '/productos', '/formasdepagos'];
   const authRequired = !publicPages.includes(to.path);
   //const rutaProtegida = to.matched.some(record => record.meta.requireAuth);
   if (authRequired && !store.state.auth.user?.token) {
