@@ -23,6 +23,11 @@ Vue.use(VueRouter);
       component: () => import("../views/Productos.vue")
     },
     {
+      path: "/categorias",
+      name: "categorias",
+      component: () => import("../views/Categorias.vue")
+    },
+    {
       path: "/tutorials/:id",
       name: "tutorial-details",
       component: () => import("../components/Tutorial.vue")
@@ -64,29 +69,29 @@ Vue.use(VueRouter);
 
 export default router;
 
-router.beforeEach((to, from, next) => {
-  // redirect to login page if not logged in and trying to access a restricted page
-  if (to.meta.title) {
-    document.title = to.meta.title + " | SPA";
-  } else {
-    document.title = "SPA VUE";
-  }
+// router.beforeEach((to, from, next) => {
+//   // redirect to login page if not logged in and trying to access a restricted page
+//   if (to.meta.title) {
+//     document.title = to.meta.title + " | SPA";
+//   } else {
+//     document.title = "SPA VUE";
+//   }
 
-  const publicPages = ['/login', '/register', '/productos', '/formasdepagos'];
-  const authRequired = !publicPages.includes(to.path);
-  //const rutaProtegida = to.matched.some(record => record.meta.requireAuth);
-  if (authRequired && !store.state.auth.user?.token) {
-    return next('/login');
-  }
+//   const publicPages = ['/login', '/register', '/productos', '/formasdepagos'];
+//   const authRequired = !publicPages.includes(to.path);
+//   //const rutaProtegida = to.matched.some(record => record.meta.requireAuth);
+//   if (authRequired && !store.state.auth.user?.token) {
+//     return next('/login');
+//   }
 
-  if (to.path == '/login' && store.state.auth.user?.token) {
-    return next('/');
-  }
+//   if (to.path == '/login' && store.state.auth.user?.token) {
+//     return next('/');
+//   }
 
-  if (to.meta.roles && !to.meta.roles.includes(store.state.auth.roles) && store.state.auth.user?.token) {
-    return next('/tutorials');
-  }
+//   if (to.meta.roles && !to.meta.roles.includes(store.state.auth.roles) && store.state.auth.user?.token) {
+//     return next('/tutorials');
+//   }
 
-  next();
-})
+//   next();
+// })
 

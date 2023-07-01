@@ -8,8 +8,16 @@
 
         <v-col cols="12">
 
-          <v-autocomplete v-model="model" :items="items" :loading="isLoading" :search-input.sync="search" chips clearable
+          <!-- <v-autocomplete v-model="model" :items="items" :loading="isLoading" :search-input.sync="search" chips clearable
             hide-details hide-selected item-text="name" item-value="id" label="Search for a coin..." solo>
+          </v-autocomplete> -->
+
+          <v-autocomplete :items="items2" v-model="model2" item-text="nombre" item-value="id" label="Select a item"
+            return-object autocomplete="off">
+            <template v-slot:append-item>
+              <div v-intersect="endIntersect" />
+              Loading more items ...
+            </template>
           </v-autocomplete>
 
         </v-col>
@@ -77,13 +85,12 @@ export default {
   data() {
     return {
       isLoading: false,
-      items: [],
-      model: null,
+      items2: [],
+      model2: null,
       search: null,
       tab: null,
-
-
-      perPage: 30,
+      items: [],
+      perPage: 5,
       page: 1,
       categories: null,
       valid: true,
@@ -161,6 +168,20 @@ export default {
 
 
   methods: {
+    endIntersect(entries, observer, isIntersecting) {
+      if (isIntersecting) {
+        this.loadMoreFromApi()
+          .then(({ data }) => {
+            if(this.items2.length>=data.data.datatotal){return}
+            this.items2 = [...this.items2, ...data.data];
+          })
+          .catch(err => { console.log(err) });
+        this.page += 1;
+      }
+    },
+    async loadMoreFromApi() {
+      return await axios(`http://127.0.0.1:8000/api/productos?page=${this.page}&per_page=${this.perPage}`)
+    },
     onIntersect() {
       console.log('load more...')
       this.page += 1
