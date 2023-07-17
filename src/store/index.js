@@ -12,15 +12,8 @@ export default new Vuex.Store({
   plugins: [
     createPersistedState({
       key: 'user',
-      storage: {
-        getItem: (key) => {
-          try {
-          ls.get(key);
-        } catch (error) {
-          localStorage.clear();
-          location.reload();
-        }
-      },
+      storage: { 
+        getItem: (key) => ls.get(key),
         setItem: (key, value) => ls.set(key, value),
         removeItem: key => ls.remove(key)
       }
