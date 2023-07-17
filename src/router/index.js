@@ -7,6 +7,11 @@ Vue.use(VueRouter);
   mode: "history",
   routes: [
     {
+      path: "/prueba",
+      name: "prueba",
+      component: () => import("../components/PruebaTest.vue")
+    },
+    {
       path: "/",
       alias: "/tutorials",
       name: "tutorials",
@@ -26,6 +31,11 @@ Vue.use(VueRouter);
       path: "/categorias",
       name: "categorias",
       component: () => import("../views/Categorias.vue")
+    },
+    {
+      path: "/nuevacategoria",
+      name: "nuevacategoria",
+      component: () => import("../components/ModalFormCategorias.vue")
     },
     {
       path: "/tutorials/:id",
