@@ -3,78 +3,105 @@ import VueRouter  from "vue-router";
 import store from "../store";
 Vue.use(VueRouter);
 
-//export const router = new Router({
-//export default new Router({
   const router = new VueRouter({
   mode: "history",
   routes: [
     {
+      path: "/prueba",
+      name: "prueba",
+      component: () => import("../components/PruebaTest.vue")
+    },
+    {
       path: "/",
       alias: "/tutorials",
       name: "tutorials",
-      component: () => import("../components/TutorialsList")
+      component: () => import("../components/TutorialsList.vue")
+    },
+    {
+      path: "/formasdepagos",
+      name: "formasdepagos",
+      component: () => import("../views/Formasdepago.vue")
+    },
+    {
+      path: "/productos",
+      name: "productos",
+      component: () => import("../views/Productos.vue")
+    },
+    {
+      path: "/categorias",
+      name: "categorias",
+      component: () => import("../views/Categorias.vue")
+    },
+    {
+      path: "/nuevacategoria",
+      name: "nuevacategoria",
+      component: () => import("../components/ModalFormCategorias.vue")
     },
     {
       path: "/tutorials/:id",
       name: "tutorial-details",
-      component: () => import("../components/Tutorial")
+      component: () => import("../components/Tutorial.vue")
     },
     {
       path: "/add",
       name: "add",
-      component: () => import("../components/AddTutorial")
+      component: () => import("../components/AddTutorial.vue")
     },
     {
       path: "/login",
       name: "login",
       meta: { title: "Sign In" },
-      component: () => import("../components/Login")
+      component: () => import("../components/Login.vue")
     },
     {
       path: "/profile",
       name: "profile",
       //meta: { title: "profile", roles: ["SUPER_ADMIN","ADMIN"] },
-      component: () => import("../components/Profile")
+      component: () => import("../components/Profile.vue")
     },
     {
       path: "/register",
       name: "register",
-      component: () => import("../components/Register")
+      component: () => import("../components/Register.vue")
     },
     {
       path: "/dashboard",
-      alias: "dashboard",
       name: "dashboard",
-      component: () => import("../components/Dashboard")
-    }
+      component: () => import("../components/Dashboard.vue")
+    },
+    {
+      path: "/logout",
+      name: "logout",
+      component: () => import("../components/Logout.vue")
+    },
   ]
 });
 
 export default router;
 
-router.beforeEach((to, from, next) => {
-  // redirect to login page if not logged in and trying to access a restricted page
-  if (to.meta.title) {
-    document.title = to.meta.title + " | SPA";
-  } else {
-    document.title = "SPA VUE";
-  }
+// router.beforeEach((to, from, next) => {
+//   // redirect to login page if not logged in and trying to access a restricted page
+//   if (to.meta.title) {
+//     document.title = to.meta.title + " | SPA";
+//   } else {
+//     document.title = "SPA VUE";
+//   }
 
-  const publicPages = ['/login', '/register'];
-  const authRequired = !publicPages.includes(to.path);
-  //const rutaProtegida = to.matched.some(record => record.meta.requireAuth);
-  if (authRequired && !store.state.auth.user?.token) {
-    return next('/login');
-  }
+//   const publicPages = ['/login', '/register', '/productos', '/formasdepagos'];
+//   const authRequired = !publicPages.includes(to.path);
+//   //const rutaProtegida = to.matched.some(record => record.meta.requireAuth);
+//   if (authRequired && !store.state.auth.user?.token) {
+//     return next('/login');
+//   }
 
-  if (to.path == '/login' && store.state.auth.user?.token) {
-    return next('/');
-  }
+//   if (to.path == '/login' && store.state.auth.user?.token) {
+//     return next('/');
+//   }
 
-  if (to.meta.roles && !to.meta.roles.includes(store.state.auth.roles) && store.state.auth.user?.token) {
-    return next('/tutorials');
-  }
+//   if (to.meta.roles && !to.meta.roles.includes(store.state.auth.roles) && store.state.auth.user?.token) {
+//     return next('/tutorials');
+//   }
 
-  next();
-})
+//   next();
+// })
 

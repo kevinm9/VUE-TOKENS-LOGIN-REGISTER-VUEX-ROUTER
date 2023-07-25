@@ -1,18 +1,27 @@
 <template>
-  <div v-if="currentTutorial" class="edit-form">
+  <div
+    v-if="currentTutorial"
+    class="edit-form"
+  >
     <h4>Tutorial</h4>
     <form>
       <div class="form-group">
         <label for="title">Title</label>
-        <input type="text" class="form-control" id="title"
+        <input
+          id="title"
           v-model="currentTutorial.title"
-        />
+          type="text"
+          class="form-control"
+        >
       </div>
       <div class="form-group">
         <label for="description">Description</label>
-        <input type="text" class="form-control" id="description"
+        <input
+          id="description"
           v-model="currentTutorial.description"
-        />
+          type="text"
+          class="form-control"
+        >
       </div>
 
       <div class="form-group">
@@ -21,26 +30,32 @@
       </div>
     </form>
 
-    <button class="btn btn-sm btn-primary mr-2"
+    <button
       v-if="currentTutorial.published"
+      class="btn btn-sm btn-primary mr-2"
       @click="updatePublished(false)"
     >
       UnPublish
     </button>
     
-    <button v-else class="btn btn-sm btn-primary mr-4"
+    <button
+      v-else
+      class="btn btn-sm btn-primary mr-4"
       @click="updatePublished(true)"
     >
       Publish
     </button>
 
-    <button class="btn btn-sm btn-danger mr-4"
+    <button
+      class="btn btn-sm btn-danger mr-4"
       @click="deleteTutorial"
     >
       Delete
     </button>
 
-    <button type="submit" class="btn btn-sm btn-success"
+    <button
+      type="submit"
+      class="btn btn-sm btn-success"
       @click="updateTutorial"
     >
       Update
@@ -48,7 +63,7 @@
   </div>
 
   <div v-else>
-    <br />
+    <br>
     <p>No data...</p>
   </div>
 </template>
@@ -63,12 +78,14 @@ export default {
       currentTutorial: null,
     };
   },
+  mounted() {
+    this.getTutorial(this.$route.params.id);
+  },
   methods: {
     getTutorial(id) {
       TutorialDataService.get(id)
         .then(response => {
           this.currentTutorial = response.data.data;
-          console.log(response.data);
         })
         .catch(e => {
           console.log(e);
@@ -84,10 +101,9 @@ export default {
       };
 
       TutorialDataService.update(this.currentTutorial.id, data)
-        .then(response => {
-          this.currentTutorial.published = status;
-          console.log(response.data);
-        })
+        .then( 
+          this.currentTutorial.published = status
+        )
         .catch(e => {
           console.log(e);
         });
@@ -95,10 +111,9 @@ export default {
 
     updateTutorial() {
       TutorialDataService.update(this.currentTutorial.id, this.currentTutorial)
-        .then(response => {
-          console.log(response.data);
-          this.$router.push({ name: "tutorials" });        
-        })
+        .then(
+          this.$router.push({ name: "tutorials" })      
+        )
         .catch(e => {
           console.log(e);
         });
@@ -106,17 +121,13 @@ export default {
 
     deleteTutorial() {
       TutorialDataService.delete(this.currentTutorial.id)
-        .then(response => {
-          console.log(response.data);
-          this.$router.push({ name: "tutorials" });
-        })
+        .then(
+          this.$router.push({ name: "tutorials" })
+        )
         .catch(e => {
           console.log(e);
         });
     }
-  },
-  mounted() {
-    this.getTutorial(this.$route.params.id);
   }
 };
 </script>

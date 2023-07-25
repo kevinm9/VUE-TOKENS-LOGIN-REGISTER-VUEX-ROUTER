@@ -2,9 +2,19 @@
   <div class="list row">
     <div class="col-md-8">
       <div class="input-group mb-3">
-        <input @keyup="searchTitle" type="text" class="form-control" placeholder="Search by title" v-model="title" />
+        <input
+          v-model="title"
+          type="text"
+          class="form-control"
+          placeholder="Search by title"
+          @keyup="searchTitle"
+        >
         <div class="input-group-append">
-          <button class="btn btn-outline-secondary" type="button" @click="searchTitle">
+          <button
+            class="btn btn-outline-secondary"
+            type="button"
+            @click="searchTitle"
+          >
             Search
           </button>
         </div>
@@ -13,8 +23,13 @@
     <div class="col-md-6">
       <h4>Tutorials List</h4>
       <ul class="list-group">
-        <li class="list-group-item " :class="{ active: index == currentIndex }" v-for="(tutorial, index) in tutorials"
-          :key="index" @click="setActiveTutorial(tutorial, index)">
+        <li
+          v-for="(tutorial, index) in tutorials"
+          :key="index"
+          class="list-group-item "
+          :class="{ active: index == currentIndex }"
+          @click="setActiveTutorial(tutorial, index)"
+        >
           {{ tutorial.title }}
         </li>
       </ul>
@@ -22,7 +37,10 @@
         there is no data :C
       </div>
 
-      <button class="m-3 btn btn-sm btn-danger" @click="removeAllTutorials">
+      <button
+        class="m-3 btn btn-sm btn-danger"
+        @click="removeAllTutorials"
+      >
         Remove All
       </button>
     </div>
@@ -39,10 +57,15 @@
           <label><strong>Status:</strong></label> {{ currentTutorial.published ? "Published" : "Pending" }}
         </div>
 
-        <router-link :to="'/tutorials/' + currentTutorial.id" class="btn btn-sm btn-success">Edit</router-link>
+        <router-link
+          :to="'/tutorials/' + currentTutorial.id"
+          class="btn btn-sm btn-success"
+        >
+          Edit
+        </router-link>
       </div>
       <div v-else>
-        <br />
+        <br>
         <p>Please click on a Tutorial...</p>
       </div>
     </div>
@@ -53,7 +76,7 @@
 import TutorialDataService from "../services/TutorialDataService";
 
 export default {
-  name: "tutorials-list",
+  name: "TutorialsList",
   data() {
     return {
       tutorials: [],
@@ -62,12 +85,14 @@ export default {
       title: ""
     };
   },
+  mounted() {
+    this.retrieveTutorials();
+  },
   methods: {
     retrieveTutorials() {
       TutorialDataService.getAll()
         .then(response => {
           this.tutorials = response.data;
-          console.log(response.data);
         })
         .catch(e => {
           console.log(e);
@@ -92,10 +117,9 @@ export default {
 
     removeAllTutorials() {
       TutorialDataService.deleteAll()
-        .then(response => {
-          console.log(response.data);
-          this.refreshList();
-        })
+        .then( 
+          this.refreshList()
+        )
         .catch(e => {
           console.log(e);
         });
@@ -111,7 +135,6 @@ export default {
         TutorialDataService.findByTitle(this.title)
           .then(response => {
             this.tutorials = response.data;
-            console.log(response.data);
           })
           .catch(e => {
             console.log(e);
@@ -121,9 +144,6 @@ export default {
     }
 
 
-  },
-  mounted() {
-    this.retrieveTutorials();
   }
 };
 </script>
