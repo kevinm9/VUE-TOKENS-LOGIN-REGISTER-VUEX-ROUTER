@@ -1,5 +1,5 @@
 <template>
-  <v-form ref="form" lazy-validation>
+  <v-form ref="form" lazy-validation @submit.prevent="">
     <v-container>
       <v-text-field outlined v-model="categoria.nombre" :rules="rulescategoria.nombre" label="Nombre"></v-text-field>
       <v-checkbox v-model="categoria.estado" :rules="rulescategoria.estado" label="Activo"></v-checkbox>

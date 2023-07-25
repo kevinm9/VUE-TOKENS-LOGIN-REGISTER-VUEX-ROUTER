@@ -55,7 +55,7 @@
 import CategoriasDataService from "../services/CategoriasDataService";
 import ModalForm from '@/components/ModalFormCategorias.vue'
 export default {
-  name: "show-productos",
+  name: "show-categoria",
   components: {
     ModalForm,
   },

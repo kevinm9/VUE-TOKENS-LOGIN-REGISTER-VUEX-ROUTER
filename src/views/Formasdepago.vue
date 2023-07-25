@@ -1,82 +1,62 @@
 <template>
   <v-app>
 
-<v-card elevation="6" class="mx-auto m-4" outlined
-    max-width="344">
-  <v-card-title>
-    Nuevo
-  </v-card-title>
-  <v-card-subtitle>
-sub
-  </v-card-subtitle>
-  <v-card-text>
-sdfsdf
-  </v-card-text>
-  <v-card-actions>
 
-    <v-btn
-        outlined
-        rounded
-        text
-      >
-        Button
-      </v-btn>
-
-      <v-dialog
-      max-width="600px" v-model="dialog"
-    >
- 
-    <v-card>
-                <v-card-title class="headline" primary-title>
-                  Compose Message
-                </v-card-title>
-                <v-card-text class="pa-5">
-                    <ModalForm propsdata="nuevo" @closemodalt="mensaje" ></ModalForm>
-                    <ModalForm2></ModalForm2>
-                </v-card-text>
-                <v-card-actions class="pa-5">
-                    <v-btn class="ml-auto"  outlined color="primary">Cancel</v-btn>
-                </v-card-actions>
-    </v-card>
-
-    <template v-slot:activator="{ on, attrs }">
-          <v-btn
-            color="primary"
-            dark
-            v-bind="attrs"
-            v-on="on"
-          >
-            Open abrir
+    <v-dialog width="500px" persistent v-model="dialog">
+      <v-card>
+        <v-toolbar dark color="primary">
+          <v-toolbar-title>Ventana modal</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-btn icon @click="dialog = false">
+            <v-icon>mdi-close</v-icon>
           </v-btn>
-        </template>
+        </v-toolbar>
+        <v-card-text class="pa-4">
+          <v-form ref="form" lazy-validation @submit.prevent="">
+            <v-container>
+              <v-text-field outlined v-model="formadepago.nombre" :rules="rulesformadepago.nombre"
+                label="Nombre"></v-text-field>
+              <v-checkbox v-model="formadepago.estado" :rules="rulesformadepago.estado" label="Activo"></v-checkbox>
+              <v-row class="d-flex justify-end mt-4">
+                <v-btn v-if="titulo" color="success" :loading="loading" :disabled="loading" class="mr-4" @click="editar">
+                  Editar <v-icon right dark>mdi-pencil</v-icon>
+                </v-btn>
+                <v-btn v-else color="primary" :loading="loading" :disabled="loading" class="mr-4" @click="guardar">
+                  Guardar
+                  <v-icon right dark>mdi-cloud-upload</v-icon>
+                </v-btn>
+                <v-btn color="error" class="mr-4" @click="reset">
+                  Rellenar de nuevo
+                </v-btn>
+              </v-row>
+            </v-container>
+          </v-form>
+        </v-card-text>
+      </v-card>
     </v-dialog>
-
-  </v-card-actions>
-</v-card>
 
 
 
     <v-card>
       <v-card-title>
-        Tutoriales
-        <v-btn color="primary" @click="dialog = true">
+        Formas de pago
+        <v-btn class="ml-2" color="primary" @click="abrirmodal">
           +
         </v-btn>
         <v-spacer></v-spacer>
-        <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line
-          hide-details></v-text-field>
-      </v-card-title>
+        <v-text-field outlined @input="buscar" v-model="search" append-icon="mdi-magnify" label="Buscar"></v-text-field>
+      </v-card-title>  
       <v-data-table :headers="headers" :items="items" :options.sync="options" :server-items-length="totalitem"
-        :loading="loading">
+        :loading="loadingtable">
 
-        <template v-slot:item.published="{ item }">
-          <v-chip :color="getColor(item.published)" dark>
-            {{ item.published }}
+        <template v-slot:item.stock="{ item }">
+          <v-chip :color="getColor(item.stock)" dark>
+            {{ item.stock }}
           </v-chip>
         </template>
 
         <template v-slot:item.actions="{ item }">
-          <v-icon small class="mr-2" @click="mensaje(item)">
+          <v-icon small class="mr-2" @click="editItem(item)">
             mdi-pencil
           </v-icon>
           <v-icon small @click="deleteItem(item)">
@@ -87,119 +67,228 @@ sdfsdf
       </v-data-table>
     </v-card>
 
-    <v-dialog v-model="dialogDelete" max-width="500px">
-      <v-card>
-        <v-card-title class="text-h5">Are you sure you want to delete this item?</v-card-title>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="mensaje">Cancel</v-btn>
-          <v-btn color="blue darken-1" text @click="mensaje">OK</v-btn>
-          <v-spacer></v-spacer>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-
   </v-app>
-
 </template>
 <style scoped></style>
 <script>
-
-import ModalForm from '@/components/FormFormasdepago.vue'
-import ModalForm2 from '@/components/AddTutorial.vue'
-import axios from "axios";
+import FormasdepagosDataService from "../services/FormasdepagosDataService";
 export default {
-  name: "DatatableComponent",
+  name: "show-formasdepagos",
   components: {
-    ModalForm,
-    ModalForm2,
   },
   data() {
     return {
+      loading: false,
+      formadepago: {
+        nombre: "",
+        estado: true
+      },
+      rulesformadepago: {
+        nombre: [(v) => !!v || "Campo requerido"],
+        estado: [(v) => !!v || "Campo requerido"],
+      },
       dialog: false,
-      dialogDelete: false,
-      search:'',
+      search: '',
       totalitem: 0,
       items: [],
-      loading: true,
+      loadingtable: true,
       options: {},
       headers: [
-        { text: "ID", value: "id", sortable: true },
-        { text: "titulo", value: "title" },
-        { text: "description", value: "nombre" },
-        { text: "published", value: "published" },
-        { text: "created_at", value: "created_at" },
-        { text: 'Actions', value: 'actions', sortable: false },
+        { text: "Id", value: "id", sortable: true },
+        { text: "Nombre", value: "nombre" },
+        { text: "Fecha de Creación", value: "created_at" },
+        { text: 'Acción', value: 'actions', sortable: false },
       ],
     };
   },
   watch: {
     options: {
       handler() {
-        this.getDataFromApi()
+        this.getDataFromApi();
       },
       deep: true,
-    },
-    search() {
-        this.getDataFromApi();
     }
   },
   methods: {
+    buscar() {
+      if (this.timer) {
+        clearTimeout(this.timer);
+        this.timer = null;
+      }
+      this.timer = setTimeout(() => {
+        this.getDataFromApi();
+      }, 800);
+
+    },
     getDataFromApi() {
-      this.loading = true;
+      this.loadingtable = true;
+      this.items = [];
       const { sortBy, sortDesc, page, itemsPerPage } = this.options
       let urlsortDesc = sortDesc[0] ? 'asc' : 'desc';
-      axios.get("http://127.0.0.1:8000/api/formasdepagos?per_page=" +
-        itemsPerPage +
-        "&page=" +
-        page +
-        "&sortBy=" +
-        sortBy +
-        "&sortDesc=" +
-        urlsortDesc +
-        "&title="+
-        this.search
-      ).then((response) => {
-        this.loading = false;
+      FormasdepagosDataService.getAll({
+        per_page: itemsPerPage,
+        page: page,
+        sortBy: String(sortBy),
+        sortDesc: urlsortDesc,
+        keyword: this.search
+      }).then(response => {
+        this.loadingtable = false;
         this.items = response.data.data;
         this.totalitem = response.data.total;
-      }).catch((error)=>{
-        console.log(error);
-        this.loading = false;
-      });
-    },
-    getColor(calories) {
-      if (calories > 0) return 'red'
-      else if (calories > 1) return 'orange'
-      else return 'green'
+      }).catch(e => {
+        console.log(e);
+        this.loadingtable = false;
+      })
     },
     mensaje(item) {
       this.dialog = false;
       alert(item);
       this.$toast("My toast content", {
-    timeout: 2000
-});
+        timeout: 2000
+      });
     },
     deleteItem(item) {
-      this.dialogDelete = true
       this.$swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-            if (result.value) {
+        title: '¿Está seguro?',
+        text: "¡No podrás revertir esto!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, eliminar a ' + item.nombre + '!'
+      }).then((result) => {
+        if (result.value) {
+          this.loadingtable = true;
+          this.items = [];
+          FormasdepagosDataService.delete(item.id)
+            .then((response) => {
+              this.$swal({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                background: '#a5dc86',
+                iconColor: 'white',
+                color: 'white',
+                timerProgressBar: true,
+                timer: 3000,
+                icon: 'success',
+                text: 'Elimado!',
+              });
+              this.getDataFromApi();
+            })
+            .catch((e) => {
               this.$swal.fire(
-                    'Deleted!',
-                    'Your file has been deleted.',
-                    'success'
-                )
-            }
-        })
+                'Oops...',
+                'Error.',
+                'error')
+              console.log(e);
+            });
+        }
+      })
     },
+    guardar() {
+      if (!this.$refs.form.validate()) {
+        return
+      }
+      this.loading = true;
+      FormasdepagosDataService.create(this.formadepago)
+        .then((response) => {
+          this.$swal({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            background: '#a5dc86',
+            iconColor: 'white',
+            color: 'white',
+            timerProgressBar: true,
+            timer: 3000,
+            icon: 'success',
+            text: 'Guardado!',
+          });
+          this.exito();
+        })
+        .catch((e) => {
+          this.loading = false;
+          this.$swal({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            background: '#f27474',
+            iconColor: 'white',
+            color: 'white',
+            timerProgressBar: true,
+            timer: 3000,
+            icon: 'error',
+            text: 'Error!',
+          });
+          console.log(e);
+        });
+    },
+    editar() {
+      if (!this.$refs.form.validate()) {
+        return
+      }
+      this.loading = true;
+      FormasdepagosDataService.update(this.formadepago.id, this.formadepago)
+        .then((response) => {
+          this.$swal({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            background: '#a5dc86',
+            iconColor: 'white',
+            color: 'white',
+            timerProgressBar: true,
+            timer: 3000,
+            icon: 'success',
+            text: 'Editado!',
+          });
+          this.exito();
+        })
+        .catch((e) => {
+          this.loading = false;
+          this.$swal({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            background: '#f27474',
+            iconColor: 'white',
+            color: 'white',
+            timerProgressBar: true,
+            timer: 3000,
+            icon: 'error',
+            text: 'Error!',
+          });
+          console.log(e);
+        });
+    },
+    reset() {
+      this.$refs.form.reset();
+      this.formadepago.estado = true;
+    },
+    exito() {
+      this.$refs.form.reset();
+      this.loading = false;
+      this.dialog = false;
+      this.getDataFromApi();
+    },
+    abrirmodal() {
+      this.dialog = true;
+      this.reset();
+      this.formadepago = {};
+    },
+    editItem(item) {
+      this.dialog = true;
+      this.formadepago = { ...item};
+      this.$refs.form.resetValidation();
+    },
+    cerrarmodal() {
+      this.dialog = false;
+      this.getDataFromApi();
+    }
+  },
+  computed: {
+    titulo() { return this.formadepago?.id ? true : false }
   },
   mounted() {
 
