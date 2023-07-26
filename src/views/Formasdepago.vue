@@ -2,7 +2,7 @@
   <v-app>
 
 
-    <v-dialog width="500px" persistent v-model="dialog">
+    <v-dialog width="500px" persistent v-model="dialog" eager>
       <v-card>
         <v-toolbar dark color="primary">
           <v-toolbar-title>Ventana modal</v-toolbar-title>
