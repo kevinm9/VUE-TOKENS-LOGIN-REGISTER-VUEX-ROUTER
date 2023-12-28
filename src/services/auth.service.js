@@ -2,9 +2,8 @@ import api from "./api.service";
 
 class AuthService {
   login(user) {
-    return api.post("/login", user)
-      .then((response) => {
-        return response.data.data;
+    return api.post("/login", user).then((response) => {
+        return response.data;
       })
   }
 
@@ -18,7 +17,7 @@ class AuthService {
   }
 
   register(user) {
-    return api.post("/auth/signup", user).then((response) => {
+    return api.post("/registro", user).then((response) => {
       return response.data;
     });
   }

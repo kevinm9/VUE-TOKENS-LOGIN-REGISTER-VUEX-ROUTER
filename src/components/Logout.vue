@@ -26,6 +26,7 @@ export default {
                     this.$router.push("login");
                 },
                 error => {
+                    this.$router.push("login");
                     console.log(error);
                 }
             )

@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-container fluid>
 
 
     <v-dialog width="500px" persistent v-model="dialog" eager scrollable>
@@ -94,7 +94,7 @@
       </v-data-table>
     </v-card>
 
-  </v-app>
+  </v-container>
 </template>
 <style scoped></style>
 <script>
@@ -164,8 +164,7 @@ export default {
       CategoriasDataService.getAll({
         per_page: -1,
         page: 1
-      }).then(res=> {
-          const { data } = res.data
+      }).then(({data}) => {
           this.itemscategoria = data
         })
         .catch(err => {

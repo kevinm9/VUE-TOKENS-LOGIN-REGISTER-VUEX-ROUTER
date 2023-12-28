@@ -13,9 +13,8 @@ Vue.use(VueRouter);
     },
     {
       path: "/",
-      alias: "/tutorials",
-      name: "tutorials",
-      component: () => import("../components/TutorialsList.vue")
+      name: "home",
+      component: () => import("../views/Home.vue")
     },
     {
       path: "/formasdepagos",
@@ -51,18 +50,18 @@ Vue.use(VueRouter);
       path: "/login",
       name: "login",
       meta: { title: "Sign In" },
-      component: () => import("../components/Login.vue")
+      component: () => import("../views/Login.vue")
     },
     {
       path: "/profile",
       name: "profile",
       //meta: { title: "profile", roles: ["SUPER_ADMIN","ADMIN"] },
-      component: () => import("../components/Profile.vue")
+      component: () => import("../views/Profile.vue")
     },
     {
       path: "/register",
       name: "register",
-      component: () => import("../components/Register.vue")
+      component: () => import("../views/Register.vue")
     },
     {
       path: "/dashboard",

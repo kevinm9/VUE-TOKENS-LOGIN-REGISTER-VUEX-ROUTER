@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-container fluid>
 
 
     <v-dialog width="500px" persistent v-model="dialog" eager>
@@ -67,7 +67,7 @@
       </v-data-table>
     </v-card>
 
-  </v-app>
+  </v-container>
 </template>
 <style scoped></style>
 <script>
@@ -131,10 +131,10 @@ export default {
         sortBy: String(sortBy),
         sortDesc: urlsortDesc,
         keyword: this.search
-      }).then(response => {
+      }).then(({data}) => {
         this.loadingtable = false;
-        this.items = response.data.data;
-        this.totalitem = response.data.total;
+        this.items = data;
+        this.totalitem = data.total;
       }).catch(e => {
         console.log(e);
         this.loadingtable = false;
