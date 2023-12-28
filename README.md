@@ -1,4 +1,16 @@
 # front-vue
+```
+VUE
+TOKENS
+LOGIN
+REGISTER
+VUEX
+ROUTER
+vuetify
+```
+
+![alt text](https://raw.githubusercontent.com/kevinm9/VUE-TOKENS-LOGIN-REGISTER-VUEX-ROUTER/login/capturasvue.png)
+
 
 ## Project setup
 ```
