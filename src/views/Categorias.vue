@@ -25,9 +25,9 @@
           +
         </v-btn>
         <v-spacer></v-spacer>
-        <v-text-field outlined v-model="search" append-icon="mdi-magnify" label="Buscar"></v-text-field>
+        <v-text-field outlined v-model="search"  append-icon="mdi-magnify" label="Buscar"></v-text-field>
       </v-card-title>
-      <v-data-table :headers="headers" :items="items" :options.sync="options" :server-items-length="totalitem"
+      <v-data-table :search="search" :headers="headers" :items="items" :server-items-length="totalitem"
         :loading="loadingtable">
 
         <template v-slot:item.stock="{ item }">
@@ -79,30 +79,12 @@ export default {
       ],
     };
   },
-  watch: {
-    options: {
-      handler() {
-        this.getDataFromApi();
-      },
-      deep: true,
-    },
-    search() {
-      this.getDataFromApi();
-    }
-  },
   methods: {
     getDataFromApi() {
+      this.search="";
       this.loadingtable = true;
       this.items = [];
-      const { sortBy, sortDesc, page, itemsPerPage } = this.options
-      let urlsortDesc = sortDesc[0] ? 'asc' : 'desc';
-      CategoriasDataService.getAll({
-        per_page: itemsPerPage,
-        page: page,
-        sortBy: String(sortBy),
-        sortDesc: urlsortDesc,
-        keyword: this.search
-      }).then(({data}) => {
+      CategoriasDataService.getAll().then(({data}) => {
         this.loadingtable = false;
         this.items = data;
         this.totalitem = data.total;
@@ -176,7 +158,7 @@ export default {
     }
   },
   mounted() {
-
+this.getDataFromApi();
   },
 };
 </script>

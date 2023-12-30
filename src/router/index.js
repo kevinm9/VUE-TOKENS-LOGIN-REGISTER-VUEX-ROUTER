@@ -7,6 +7,16 @@ Vue.use(VueRouter);
   mode: "history",
   routes: [
     {
+      path: "/cart",
+      name: "cart",
+      component: () => import("../components/CartShop.vue")
+    },
+    {
+      path: "/shop",
+      name: "shop",
+      component: () => import("../components/PruebaUno.vue")
+    },
+    {
       path: "/prueba",
       name: "prueba",
       component: () => import("../components/PruebaTest.vue")
