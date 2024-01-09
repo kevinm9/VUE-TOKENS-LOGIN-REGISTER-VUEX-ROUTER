@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import { auth } from './auth.module';
+import { cart } from './cart.module';
 
 import createPersistedState from "vuex-persistedstate";
 import SecureLS from "secure-ls";
@@ -20,6 +21,7 @@ export default new Vuex.Store({
     })
   ],
   modules: {
-    auth
+    auth,
+    cart
   }
 });

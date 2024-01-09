@@ -7,6 +7,11 @@ Vue.use(VueRouter);
   mode: "history",
   routes: [
     {
+      path: '/product/:id',
+      name: 'product',
+      component: () => import("../components/Showproducto.vue")
+    },
+    {
       path: "/cart",
       name: "cart",
       component: () => import("../components/CartShop.vue")
@@ -14,7 +19,7 @@ Vue.use(VueRouter);
     {
       path: "/shop",
       name: "shop",
-      component: () => import("../components/PruebaUno.vue")
+      component: () => import("../components/StoreShop.vue")
     },
     {
       path: "/prueba",

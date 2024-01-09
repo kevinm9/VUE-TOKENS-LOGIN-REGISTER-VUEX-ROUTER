@@ -17,65 +17,40 @@
               </tr>
               </thead>
               <tbody>
-              <tr>
+
+              <tr v-for="producto in items" :key="producto.id">
                 <td>
                   <v-list-item
                   key="1"
-                   @click="alert('hola')"
+                  @click="verproducto(producto.id)"
                 >
                   <v-list-item-avatar>
                     <v-img src="https://loving-leavitt-9cb65b.netlify.app/static/img/slider4.0e80ba7.jpg"></v-img>
                   </v-list-item-avatar>
 
                   <v-list-item-content>
-                    <v-list-item-title >Item 1</v-list-item-title>
-                    <v-list-item-subtitle>Lorem Ipsum</v-list-item-subtitle>
+                    <v-list-item-title>{{ producto.nombre }}</v-list-item-title>
+                    <v-list-item-subtitle>{{ producto.Descripcion }}</v-list-item-subtitle>
                   </v-list-item-content>
                 </v-list-item></td>
-                <td>$40.00</td>
+                <td>${{ (producto.precio * 1).toFixed(2) }}</td>
                 <td>
                   <v-text-field
+                    :min="1"
+                    :max="producto.stock"
                     class="pt-10"
                     label="Outlined"
                     style="width: 80px;"
                     single-line
                     outlined
-                    value="2"
+                    @input="actualizarcantidad(producto)"
+                    v-model.number="producto.cantidad"
                     type="number"
+                    :rules="cantidadRules"
                   ></v-text-field>
                 </td>
-                <td>$80.00</td>
-                <td><a>X</a></td>
-              </tr>
-              <tr>
-                <td>
-                  <v-list-item
-                  key="1"
-                  
-                >
-                  <v-list-item-avatar>
-                    <v-img src="https://loving-leavitt-9cb65b.netlify.app/static/img/slider4.0e80ba7.jpg"></v-img>
-                  </v-list-item-avatar>
-
-                  <v-list-item-content>
-                    <v-list-item-title >Item 2</v-list-item-title>
-                    <v-list-item-subtitle>Lorem Ipsum</v-list-item-subtitle>
-                  </v-list-item-content>
-                </v-list-item></td>
-                <td>$40.00</td>
-                <td>
-                  <v-text-field
-                    class="pt-10"
-                    label="Outlined"
-                    style="width: 80px;"
-                    single-line
-                    outlined
-                    value="2"
-                    type="number"
-                  ></v-text-field>
-                </td>
-                <td>$80.00</td>
-                <td><a>X</a></td>
+                <td>${{ (calcularSubtotalporProducto(producto)).toFixed(2) }}</td>
+                <td><v-btn @click="eliminarproducto(producto)" icon><v-icon>mdi-delete</v-icon></v-btn></td>
               </tr>
               </tbody>
             </template>
@@ -90,25 +65,32 @@
               <tbody>
               <tr>
                 <td>Order Subtotal</td>
-                <td class="text-right" style="width: 50px;">$160.00</td>
+                <td class="text-right" style="width: 50px;">
+                  ${{ calcularSubtotal().toFixed(2)  }}
+                </td>
               </tr>
               <tr>
-                <td>Shipping Charges</td>
-                <td class="text-right" style="width: 50px;">$10.00</td>
+                <td>Envio</td>
+                <td class="text-right" style="width: 50px;">${{envio}}</td>
               </tr>
               <tr>
-                <td>Tax</td>
-                <td class="text-right" style="width: 50px;">$5.00</td>
+                <td>IVA 12%</td>
+                <td class="text-right" style="width: 50px;">${{ (calcularSubtotal()*impuesto).toFixed(2) }}</td>
               </tr>
               <tr>
                 <td>Total</td>
-                <td class="text-right" style="width: 50px;"><b>$175.00</b></td>
+                <td class="text-right" style="width: 50px;"><b>
+                  ${{ calcularTotal().toFixed(2) }}
+                </b></td>
               </tr>
               </tbody>
             </template>
           </v-simple-table>
           <div class="text-center">
-            <v-btn class="primary white--text mt-5" outlined>PROCEED TO PAY</v-btn>
+            <v-btn class="primary white--text mt-5" outlined>Pagar por todo</v-btn>
+          </div>
+          <div class="text-center">
+            <v-btn  to="/shop" class="success  white--text mt-5" outlined>Seguir comprando</v-btn>
           </div>
         </v-col>
       </v-row>
@@ -155,26 +137,53 @@
   </div>
 </template>
 <script>
-    export default {
-        data: () => ({
-            rating: 4.5,
-            breadcrums: [
-                {
-                    text: 'Home',
-                    disabled: false,
-                    href: 'breadcrumbs_home',
-                },
-                {
-                    text: 'Clothing',
-                    disabled: false,
-                    href: 'breadcrumbs_clothing',
-                },
-                {
-                    text: 'T-Shirts',
-                    disabled: true,
-                    href: 'breadcrumbs_shirts',
-                },
-            ],
-        })
+import { mapState, mapMutations } from 'vuex';
+export default {
+  data() {
+    return {
+      envio: 10.00,
+      impuesto: 0.12,
+      factura: {}
+    };
+  },
+  mounted() {
+  },
+  computed: {
+    items() {
+      return this.$store.getters['cart/cartItems']
+    },
+    cartItemCount() {
+      return this.$store.getters['cart/cartItemCount'];
+    },
+    cantidadRules() {
+      return [
+        v => !!v || 'Cantidad requerida',
+        v => !isNaN(Number(v)) || 'Debe ser un número',
+        v => Number(v) > 0 || 'Debe ser mayor a 0',
+        v => /^[1-9]\d*$/.test(v) || 'Debe ser un número entero mayor a 0'
+      ];
     }
+  },
+  methods: {
+    eliminarproducto(product) {
+      this.$store.commit('cart/removeFromCart', product);
+    },
+    verproducto(idproducto) {
+      this.$router.push({ name: 'product', params: { id: idproducto } });
+    },
+    actualizarcantidad(producto) {
+      this.$store.commit('cart/updateCart', producto);
+    },
+    calcularSubtotalporProducto(producto) {
+      return producto.precio * producto.cantidad;
+    },
+    calcularSubtotal() {
+      return parseFloat(this.items.reduce((total, producto) => total + producto.precio * producto.cantidad, 0));
+    },
+    calcularTotal() {
+      let subtotal = this.calcularSubtotal();
+      return subtotal + this.envio + (subtotal*this.impuesto);
+    }
+  }
+}
 </script>

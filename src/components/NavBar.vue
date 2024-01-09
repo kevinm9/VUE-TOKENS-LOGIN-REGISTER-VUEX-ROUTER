@@ -7,8 +7,8 @@
         <v-toolbar-title>SPA VUE</v-toolbar-title>
 
         <v-spacer></v-spacer>
-        <v-btn v-on="on" href="/cart" icon>
-            <v-badge content="2" value="2" color="green" overlap>
+        <v-btn to="/cart" icon>
+            <v-badge :dot="!cartItemCount" :content="cartItemCount" color="green" overlap>
                 <v-icon>mdi-cart</v-icon>
             </v-badge>
         </v-btn>
@@ -47,30 +47,37 @@
 
                 <v-list-item to="/profile" link>
                     <v-list-item-icon>
-                        <v-icon>mdi-home</v-icon>
+                        <v-icon>mdi-account</v-icon>
                     </v-list-item-icon>
                     <v-list-item-title>Profile</v-list-item-title>
                 </v-list-item>
 
                 <v-list-item to="/formasdepagos" link>
                     <v-list-item-icon>
-                        <v-icon>mdi-home</v-icon>
+                        <v-icon>mdi-credit-card</v-icon>
                     </v-list-item-icon>
                     <v-list-item-title>formasdepagos</v-list-item-title>
                 </v-list-item>
 
                 <v-list-item to="/productos" link>
                     <v-list-item-icon>
-                        <v-icon>mdi-home</v-icon>
+                        <v-icon>mdi-package-variant-closed</v-icon>
                     </v-list-item-icon>
                     <v-list-item-title>productos</v-list-item-title>
                 </v-list-item>
 
                 <v-list-item to="/categorias" link>
                     <v-list-item-icon>
-                        <v-icon>mdi-home</v-icon>
+                        <v-icon>mdi-view-list</v-icon>
                     </v-list-item-icon>
                     <v-list-item-title>categorias</v-list-item-title>
+                </v-list-item>
+
+                <v-list-item to="/shop" link>
+                    <v-list-item-icon>
+                        <v-icon>mdi-storefront</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-title>Tienda</v-list-item-title>
                 </v-list-item>
 
             </v-list-item-group>
@@ -92,6 +99,12 @@ export default {
         loggedIn() {
             return this.$store.state.auth.user?.token;
         },
+        cartItemCount() {
+            return this.$store.getters['cart/cartItemCount'] ;
+        },
+        cartItems() {
+            return this.$store.getters['cart/cartItems'];
+        }
     },
 };
 </script>
