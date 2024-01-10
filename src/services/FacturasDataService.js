@@ -30,4 +30,4 @@ class FacturasDataService {
   }
 }
 
-export default new facturasDataService();
+export default new FacturasDataService();

@@ -7,6 +7,11 @@ Vue.use(VueRouter);
   mode: "history",
   routes: [
     {
+      path: '/facturas',
+      name: 'facturas',
+      component: () => import("../views/Facturas.vue")
+    },
+    {
       path: '/product/:id',
       name: 'product',
       component: () => import("../components/Showproducto.vue")

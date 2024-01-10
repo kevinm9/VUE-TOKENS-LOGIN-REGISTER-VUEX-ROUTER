@@ -1,10 +1,18 @@
 <template>
   <div>
+    <v-overlay v-model="loading" class="align-center justify-center">
+      <v-progress-circular
+        :size="50"
+        color="secondary"
+        indeterminate
+      ></v-progress-circular>
+    </v-overlay>
     <v-container>
 
       <p class="display-3 font-weight-light	text-center pa-4">SHOPPING CART</p>
       <v-row>
         <v-col :cols="12" md="9" sm="12" >
+          <v-form ref="form" lazy-validation>
           <v-simple-table>
             <template v-slot:default>
               <thead>
@@ -18,7 +26,7 @@
               </thead>
               <tbody>
 
-              <tr v-for="producto in items" :key="producto.id">
+              <tr v-for="producto in cartitems" :key="producto.id">
                 <td>
                   <v-list-item
                   key="1"
@@ -55,6 +63,7 @@
               </tbody>
             </template>
           </v-simple-table>
+          </v-form>
         </v-col>
         <v-col :cols="12" md="3" sm="12" style="background-color: lightgray">
           <p class="headline">Order Summary</p>
@@ -87,7 +96,7 @@
             </template>
           </v-simple-table>
           <div class="text-center">
-            <v-btn class="primary white--text mt-5" outlined>Pagar por todo</v-btn>
+            <v-btn class="primary white--text mt-5" :disabled=" cartItemCount <= 0 " @click="guardar()" outlined>Pagar por todo</v-btn>
           </div>
           <div class="text-center">
             <v-btn  to="/shop" class="success  white--text mt-5" outlined>Seguir comprando</v-btn>
@@ -137,19 +146,24 @@
   </div>
 </template>
 <script>
-import { mapState, mapMutations } from 'vuex';
+import FacturasDataService from '@/services/FacturasDataService';
 export default {
   data() {
     return {
       envio: 10.00,
       impuesto: 0.12,
+      formerrors: [],
+      loading : false,
       factura: {}
     };
   },
   mounted() {
   },
   computed: {
-    items() {
+    userlogin() {
+      return this.$store.getters['auth/user'];
+    },
+    cartitems() {
       return this.$store.getters['cart/cartItems']
     },
     cartItemCount() {
@@ -178,12 +192,67 @@ export default {
       return producto.precio * producto.cantidad;
     },
     calcularSubtotal() {
-      return parseFloat(this.items.reduce((total, producto) => total + producto.precio * producto.cantidad, 0));
+      return parseFloat(this.cartitems.reduce((total, producto) => total + producto.precio * producto.cantidad, 0));
     },
     calcularTotal() {
       let subtotal = this.calcularSubtotal();
-      return subtotal + this.envio + (subtotal*this.impuesto);
-    }
+      return subtotal + this.envio + (subtotal * this.impuesto);
+    },
+    guardar() {
+      if (!this.$refs.form.validate()) {
+        this.$toast.error("digite bien la cantidad de productos que desea", {timeout: 1000});
+        return
+      }
+      this.formerrors = [];
+      this.loading = true;
+      this.factura = {
+        cliente_id: this.userlogin.id,
+        formasdepago_id: 1,
+        productos: this.cartitems,
+      }
+      FacturasDataService.create(this.factura)
+        .then((response) => {
+          this.$swal({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            background: '#a5dc86',
+            iconColor: 'white',
+            color: 'white',
+            timerProgressBar: true,
+            timer: 3000,
+            icon: 'success',
+            text: 'Guardado!',
+          });
+          this.exito();
+        },
+          error => {
+            this.formerrors = (error.response && error.response.data.message) || error.message;
+            this.$toast.error(this.formerrors, {timeout: 1000});
+            this.loading = false;
+          }
+        )
+        .catch((e) => {
+          this.loading = false;
+          this.$swal({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            background: '#f27474',
+            iconColor: 'white',
+            color: 'white',
+            timerProgressBar: true,
+            timer: 3000,
+            icon: 'error',
+            text: 'Error!',
+          });
+          console.log(e.data);
+        });
+    },
+    exito() {
+      this.loading = false;
+      this.$store.commit('cart/removeAllItemsFromCart');
+    },
   }
 }
 </script>

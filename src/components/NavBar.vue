@@ -73,6 +73,13 @@
                     <v-list-item-title>categorias</v-list-item-title>
                 </v-list-item>
 
+                <v-list-item to="/facturas" link>
+                    <v-list-item-icon>
+                        <v-icon>mdi-file-document</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-title>Facturas</v-list-item-title>
+                </v-list-item>
+
                 <v-list-item to="/shop" link>
                     <v-list-item-icon>
                         <v-icon>mdi-storefront</v-icon>

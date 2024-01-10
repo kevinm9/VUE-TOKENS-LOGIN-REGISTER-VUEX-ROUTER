@@ -35,6 +35,9 @@ export const cart = {
       let tempProduct = state.cart[indexProduct];
       state.cart.splice(tempProduct, 1);
     },
+    removeAllItemsFromCart(state) {
+      state.cart=[];
+    },
   },
   getters: {
     cartItemCount: (state) => (state.cart.length <= 0 ? 0 : state.cart.length),

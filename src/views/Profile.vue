@@ -4,18 +4,18 @@
       <v-col>
         <h2>User Profile</h2>
 
-        <v-card v-if="loggedIn">
+        <v-card v-if="user">
           <v-card-title>
-            <h3>Welcome!, {{ data.name | toUpperCase }}</h3>
+            <h3>Welcome!, {{ user.name | toUpperCase }}</h3>
           </v-card-title>
           <v-card-text>
-            <p> {{ loggedIn }}</p>
+            <p> {{ user }}</p>
           </v-card-text>
         </v-card>
 
         <v-card v-if="data">
           <v-card-title>
-            <h3>User Data</h3>
+            <h3>User Data Api Rest</h3>
           </v-card-title>
           <v-card-text>
             <p>Name: {{ data.name }}</p>
@@ -47,7 +47,7 @@ export default {
     };
   },
   computed: {
-    loggedIn() {
+    user() {
       //return this.$store.state.auth.user;
       return this.$store.getters['auth/user'];
     },
@@ -61,8 +61,7 @@ export default {
   },
   filters: {
     toUpperCase(value) {
-      const names = value.split(' '); // Suponiendo que los nombres están separados por espacio
-      return value ? names.slice(0, 2).join(' ').toUpperCase(): '';
+      return value ? value.split(' ').slice(0, 2).join(' ').toUpperCase(): '';
     }
   },
   methods: {

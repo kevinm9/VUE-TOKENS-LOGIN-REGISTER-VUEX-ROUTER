@@ -1,5 +1,13 @@
 <template>
   <div>
+    <v-overlay v-model="loadingtable" class="align-center justify-center">
+      <v-progress-circular
+        :size="50"
+        color="secondary"
+        indeterminate
+      ></v-progress-circular>
+    </v-overlay>
+    
     <v-container>
       <div class="row">
         <div class="col-md-5 col-sm-5 col-xs-12">
@@ -50,10 +58,14 @@
               <v-radio label="L" value="l"></v-radio>
               <v-radio label="XL" value="xl"></v-radio>
             </v-radio-group>
+            <p class="title">Stock</p>
+            <p class="subtitle-1 font-weight-thin">
+              {{ producto.stock }}
+            </p>
 
             <v-row justify="center" align="center" class="mt-2">
               <v-col cols="auto">
-                <v-btn @click="addToCart()" class="primary white--text" outlined tile dense>
+                <v-btn @click="addToCart()" :disabled="producto.stock<=0" class="primary white--text" outlined tile dense>
                         <v-icon>mdi-cart</v-icon> ADD TO CART
                       </v-btn>
               </v-col>
@@ -135,7 +147,8 @@
             </p>
             <v-divider></v-divider>
             <div class="row text-center">
-              <div class="col-md-2 col-sm-4 col-xs-12 text-center">
+
+              <div class="col-md-2 col-sm-4 col-xs-12 text-center" :key="pro.id" v-for="pro in itemstoproducts">
                 <v-hover v-slot:default="{ hover }" open-delay="200">
                   <v-card :elevation="hover ? 16 : 2">
                     <v-img
@@ -143,46 +156,23 @@
                       height="200px"
                       :src="require('../assets/noproduct.png')"
                     >
-                      <v-card-title>Bags & Purses </v-card-title>
+                      <v-card-title>{{pro.categoria.nombre}}</v-card-title>
                     </v-img>
 
                     <v-card-text class="text--primary text-center">
-                      <div>Upto 60% + Extra 10%</div>
-                      <div>Baggit, Zara, Fossil</div>
+                      <div>{{pro.nombre}}</div>
                     </v-card-text>
 
                     <div class="text-center">
-                      <v-btn class="ma-2" outlined color="info">
+                      <v-btn @click="redirectToProductDetails(pro.id)" class="ma-2" outlined color="info">
                         Explore
                       </v-btn>
                     </div>
                   </v-card>
                 </v-hover>
               </div>
-              <div class="col-md-2 col-sm-4 col-xs-12 text-center">
-                <v-hover v-slot:default="{ hover }" open-delay="200">
-                  <v-card :elevation="hover ? 16 : 2">
-                    <v-img
-                      class="white--text align-end"
-                      height="200px"
-                      :src="require('../assets/noproduct.png')"
-                    >
-                      <v-card-title>T-Shirt </v-card-title>
-                    </v-img>
 
-                    <v-card-text class="text--primary text-center">
-                      <div>Upto 50%</div>
-                      <div>Zara, Selected, Celio</div>
-                    </v-card-text>
 
-                    <div class="text-center">
-                      <v-btn class="ma-2" outlined color="info">
-                        Explore
-                      </v-btn>
-                    </div>
-                  </v-card>
-                </v-hover>
-              </div>
             </div>
           </v-card-text>
         </div>
@@ -236,9 +226,13 @@ export default {
   name: "show-producto",
   components: {},
   mounted() {
+    window.scrollTo(0, 0);
     this.getProducto(this.$route.params.id);
+    this.getDataFromApi();
   },
   data: () => ({
+    itemstoproducts:[],
+    loadingtable: true,
     cantidad: 1,
     producto: {},
     row: "XS",
@@ -295,28 +289,48 @@ export default {
       },
     ],
   }),
-    computed: {
+  computed: {
     cartItemCount() {
       return this.$store.getters['cart/cartItemCount'];
     },
     cartItems() {
       return this.$store.getters['cart/cartItems'];
     }
-    },
+  },
   methods: {
     addToCart() {
       this.$store.commit('cart/addToCart', this.producto);
       this.$router.push("/cart");
     },
     getProducto(id) {
+      this.loadingtable = true;
       ProductosDataService.get(id)
         .then((response) => {
+          this.loadingtable = false;
           this.producto = response.data;
+        })
+        .catch((e) => {
+          console.log(e);
+          this.loadingtable = false;
+        });
+    },
+    getDataFromApi() {
+      ProductosDataService.getAll({
+        per_page: 6,
+        page: 1
+      })
+        .then((response) => {
+          this.itemstoproducts = response.data.data;
         })
         .catch((e) => {
           console.log(e);
         });
     },
+    redirectToProductDetails(idproducto) {
+      this.$router.push({ name: 'product', params: { id: idproducto } });
+      window.location.reload();
+      window.scrollTo(0, 0);
+    }
   },
 };
 </script>
