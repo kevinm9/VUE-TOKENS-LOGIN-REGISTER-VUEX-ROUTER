@@ -16,7 +16,14 @@
                     <v-card-title>Filters</v-card-title>
                     <v-divider></v-divider>
                     <template>
-                        <v-treeview :items="itemstypeFilters" :open="[1]" :active="[5]" :selected-color="'#fff'" activatable open-on-click dense></v-treeview>
+                        <v-treeview 
+                        selection-type="independent"
+                        open-all
+                        :items="itemstypeFilters" 
+                        @update:active="categoriaidchanged" 
+                        activatable 
+                        open-on-click 
+                        color="primary"></v-treeview>
                     </template>
                     <v-divider></v-divider>
                     <v-card-title>Price</v-card-title>
@@ -61,7 +68,7 @@
                         <small>Showing 1-8 of {{totalitem}} products</small>
                     </v-col>
                     <v-col cols="12" sm="4">
-                        <v-select class="pa-0" v-model="select" :items="options" style="margin-bottom: -20px" outlined dense></v-select>
+                        <v-select @change="selectchanged" class="pa-0" v-model="select" :items="options" item-text="text" item-value="value" style="margin-bottom: -20px" outlined dense></v-select>
                     </v-col>
                 </v-row>
 
@@ -72,7 +79,7 @@
                       <v-hover v-slot:default="{ hover }">
                             <v-card class="mx-auto" color="grey lighten-4" max-width="600">
                                 <v-img class="white--text align-end" :aspect-ratio="16 / 9" height="200px" :src="require('../assets/noproduct.png')">
-                                    <v-card-title>Stock: {{ pro.stock }} </v-card-title>
+                                    <v-card-title>{{ pro.categoria.nombre }} </v-card-title>
                                     <v-expand-transition>
                                         <div v-if="hover" class="d-flex transition-fast-in-fast-out white darken-2 v-card--reveal display-3 white--text" style="height: 100%">
                                             <v-btn @click="redirectToProductDetails(pro.id)" v-if="hover"  class="" outlined>Ver</v-btn>
@@ -117,6 +124,9 @@ import ProductosDataService from "../services/ProductosDataService";
 
 export default {
     data: () => ({
+        categoriaid:"",
+        selectionType:[],
+        parametros: {},
         items: [],
         perpage:8,
         totalitem: 0,
@@ -128,13 +138,11 @@ export default {
         formerrors: [],
         loading: false,
         range: [0, 10000],
-        select: "Popularity",
+        select: "",
         options: [
-            "Default",
-            "Popularity",
-            "Relevance",
-            "Price: Low to High",
-            "Price: High to Low",
+            { text: "Default", value: "" },
+            { text: "Price: Low to High", value: "asc" },
+            { text: "Price: High to Low", value: "desc" },
         ],
         page: 1,
         breadcrums: [{
@@ -156,25 +164,25 @@ export default {
         min: 0,
         max: 10000,
         itemstypeFilters: [{
-                id: 2,
-                name: "Shoes",
+                id: 1,
+                name: "Electronicos",
                 children: [{
+                        id: 1,
+                        name: "Televisores"
+                    },
+                    {
                         id: 2,
-                        name: "Casuals"
+                        name: "Celulares y tablets"
                     },
                     {
                         id: 3,
-                        name: "Formals"
-                    },
-                    {
-                        id: 4,
-                        name: "Sneakers"
+                        name: "Audífonos"
                     },
                 ],
             },
             {
-                id: 1,
-                name: "Clothing",
+                id: 4,
+                name: "Ropa",
                 children: [{
                         id: 5,
                         name: "Shirts"
@@ -182,15 +190,7 @@ export default {
                     {
                         id: 6,
                         name: "Tops"
-                    },
-                    {
-                        id: 7,
-                        name: "Tunics"
-                    },
-                    {
-                        id: 8,
-                        name: "Bodysuit"
-                    },
+                    }
                 ],
             },
         ],
@@ -199,11 +199,15 @@ export default {
     getDataFromApi() {
             this.loadingtable = true;
             this.items = [];
-            ProductosDataService.getAll({
+            this.parametros = {
                     per_page: this.perpage,
                     page: this.page,
                     keyword: "",
-                })
+                    sortBy:this.select==""?"":"precio",
+                    sortDesc:this.select,
+                    categoriaid:this.categoriaid?this.categoriaid:""
+                }
+            ProductosDataService.getAll(this.parametros)
                 .then((response) => {
                     this.loadingtable = false;
                     this.items = response.data.data;
@@ -221,6 +225,14 @@ export default {
     updatePage(value) {
       this.page=value;
       this.getDataFromApi();
+    },
+    selectchanged() {
+      this.getDataFromApi();
+    },
+    categoriaidchanged(id) {
+        this.categoriaid = id
+        this.page=1;
+        this.getDataFromApi();
     },
     },
     mounted() {
