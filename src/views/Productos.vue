@@ -37,10 +37,10 @@
                   item-value="id"
                   label="categoria"
                   placeholder="inicia escribiendo para buscar"
-                  append-icon="mdi-magnify"
+                  clearable
                   outlined>
                 </v-autocomplete>
-              <v-checkbox v-model="producto.estado" :rules="rulesproducto.estado" label="Activo"></v-checkbox>
+              <v-checkbox class="mt-n1" outlined v-model="producto.estado" :rules="rulesproducto.estado" label="Activo"></v-checkbox>
 
 
 

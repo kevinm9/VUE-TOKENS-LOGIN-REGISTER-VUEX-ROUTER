@@ -4,7 +4,7 @@
     <v-dialog width="500px" persistent v-model="dialog" v-if="selectItem">
       <v-card>
         <v-toolbar dark color="primary">
-          <v-toolbar-title>Detalles del Producto</v-toolbar-title>
+          <v-toolbar-title>Modal Factura</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-btn icon @click="dialog = false">
             <v-icon>mdi-close</v-icon>
@@ -18,23 +18,23 @@
                 <v-list-item-group>
                   <v-list-item>
                     <v-list-item-content>
-                      <v-list-item-title>Factura ID: {{ selectItem.id }}</v-list-item-title>
-                      <v-list-item-subtitle>Fecha de emisión: {{ selectItem.created_at }}</v-list-item-subtitle>
+                      <v-list-item-title><span class="font-weight-bold">Factura ID: </span>{{ selectItem.id }}</v-list-item-title>
+                      <v-list-item-subtitle><span class="font-weight-bold">Fecha de emisión: </span>{{ selectItem.created_at }}</v-list-item-subtitle>
                     </v-list-item-content>
                   </v-list-item>
                   <v-list-item>
                     <v-list-item-content>
-                      <v-list-item-title>Total: ${{ selectItem.total }}</v-list-item-title>
+                      <v-list-item-title><span class="font-weight-bold">Total:</span>  ${{ selectItem.total }}</v-list-item-title>
                     </v-list-item-content>
                   </v-list-item>
                   <v-list-item>
                     <v-list-item-content>
-                      <v-list-item-title>Cliente: {{ selectItem.cliente?.name }}</v-list-item-title>
+                      <v-list-item-title><span class="font-weight-bold">Cliente:</span>  {{ selectItem.cliente?.name }}</v-list-item-title>
                     </v-list-item-content>
                   </v-list-item>
                   <v-list-item>
                     <v-list-item-content>
-                      <v-list-item-title>Forma de Pago: {{ selectItem.formasdepago?.nombre }}</v-list-item-title>
+                      <v-list-item-title><span class="font-weight-bold">Forma de Pago:</span> {{ selectItem.formasdepago?.nombre }}</v-list-item-title>
                     </v-list-item-content>
                   </v-list-item>
                 </v-list-item-group>

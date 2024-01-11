@@ -7,7 +7,7 @@
         <v-toolbar-title>SPA VUE</v-toolbar-title>
 
         <v-spacer></v-spacer>
-        <v-btn to="/cart" icon>
+        <v-btn v-if="loggedIn" to="/cart" icon>
             <v-badge :dot="!cartItemCount" :content="cartItemCount" color="green" overlap>
                 <v-icon>mdi-cart</v-icon>
             </v-badge>

@@ -14,27 +14,17 @@ Vue.use(VueRouter);
     {
       path: '/product/:id',
       name: 'product',
-      component: () => import("../components/Showproducto.vue")
+      component: () => import("../views/Showproducto.vue")
     },
     {
       path: "/cart",
       name: "cart",
-      component: () => import("../components/CartShop.vue")
+      component: () => import("../views/CartShop.vue")
     },
     {
       path: "/shop",
       name: "shop",
-      component: () => import("../components/StoreShop.vue")
-    },
-    {
-      path: "/prueba",
-      name: "prueba",
-      component: () => import("../components/PruebaTest.vue")
-    },
-    {
-      path: "/",
-      name: "home",
-      component: () => import("../views/Home.vue")
+      component: () => import("../views/StoreShop.vue")
     },
     {
       path: "/formasdepagos",
@@ -55,16 +45,6 @@ Vue.use(VueRouter);
       path: "/nuevacategoria",
       name: "nuevacategoria",
       component: () => import("../components/ModalFormCategorias.vue")
-    },
-    {
-      path: "/tutorials/:id",
-      name: "tutorial-details",
-      component: () => import("../components/Tutorial.vue")
-    },
-    {
-      path: "/add",
-      name: "add",
-      component: () => import("../components/AddTutorial.vue")
     },
     {
       path: "/login",
@@ -93,6 +73,12 @@ Vue.use(VueRouter);
       name: "logout",
       component: () => import("../components/Logout.vue")
     },
+    {
+      path: "/",
+      name: "home",
+      component: () => import("../views/Home.vue")
+    },
+    { path: '*', component: () => import("../views/Home.vue") },
   ]
 });
 

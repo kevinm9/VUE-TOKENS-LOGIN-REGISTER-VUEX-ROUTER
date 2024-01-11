@@ -107,13 +107,11 @@ sdfsdf
 <script>
 
 import ModalForm from '@/components/ModalFormTutorial.vue'
-import ModalForm2 from '@/components/AddTutorial.vue'
 import axios from "axios";
 export default {
   name: "DatatableComponent",
   components: {
     ModalForm,
-    ModalForm2,
   },
   data() {
     return {

@@ -178,6 +178,7 @@
         </div>
       </div>
     </v-container>
+
     <v-card class="accent">
       <v-container>
         <v-row no-gutters>
@@ -217,6 +218,7 @@
         </v-row>
       </v-container>
     </v-card>
+
   </div>
 </template>
 
@@ -310,6 +312,7 @@ export default {
           this.producto = response.data;
         })
         .catch((e) => {
+          this.$router.push('/shop'); 
           console.log(e);
           this.loadingtable = false;
         });
