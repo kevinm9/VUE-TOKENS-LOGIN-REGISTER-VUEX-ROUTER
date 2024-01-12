@@ -20,27 +20,28 @@
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
+
+              <v-row justify="center" align="center" class="pa-4">
+                <v-col cols="12" justify="center">
+                  imagen:
+                  <v-img :src="imagen ? imagen : require('../assets/noproduct.png')" @error="cargarImagenPorDefecto" alt=""
+                    :height="200"></v-img>
+                </v-col>
+              </v-row>
+
+              <v-file-input outlined @change="onFileChange" label="Imagen del producto" accept="image/*"></v-file-input>
               <v-text-field outlined v-model="producto.nombre" :rules="rulesproducto.nombre"
                 label="Nombre"></v-text-field>
               <v-text-field outlined v-model="producto.precio" :rules="rulesproducto.precio"
                 label="Precio"></v-text-field>
               <v-text-field outlined v-model="producto.stock" :rules="rulesproducto.stock" label="Stock"></v-text-field>
-                <v-autocomplete
-                :rules="rulesproducto.categoria"
-                  v-model="producto.categoria_id"
-                  :items="itemscategoria"
-                  :loading="loadingcategoria"
-                  :search-input.sync="searchcategoria"
-                  hide-no-data
-                  hide-selected
-                  item-text="nombre"
-                  item-value="id"
-                  label="categoria"
-                  placeholder="inicia escribiendo para buscar"
-                  clearable
-                  outlined>
-                </v-autocomplete>
-              <v-checkbox class="mt-n1" outlined v-model="producto.estado" :rules="rulesproducto.estado" label="Activo"></v-checkbox>
+              <v-autocomplete :rules="rulesproducto.categoria" v-model="producto.categoria_id" :items="itemscategoria"
+                :loading="loadingcategoria" :search-input.sync="searchcategoria" hide-no-data hide-selected
+                item-text="nombre" item-value="id" label="categoria" placeholder="inicia escribiendo para buscar"
+                clearable outlined>
+              </v-autocomplete>
+              <v-checkbox class="mt-n1" outlined v-model="producto.estado" :rules="rulesproducto.estado"
+                label="Activo"></v-checkbox>
 
 
 
@@ -76,6 +77,10 @@
       <v-data-table :headers="headers" :items="items" :options.sync="options" :server-items-length="totalitem"
         :loading="loadingtable">
 
+        <template v-slot:item.imagen="{ item }">
+          <v-img :src="item.imagen" alt="Imagen del producto" max-width="100" max-height="50"></v-img>
+        </template>
+
         <template v-slot:item.stock="{ item }">
           <v-chip :color="getColor(item.stock)" dark>
             {{ item.stock }}
@@ -106,9 +111,12 @@ export default {
   },
   data() {
     return {
+      imagen: "",
+      imagentable: "",
+      imagenfile64: "",
       itemscategoria: [],
-      searchcategoria:"",
-      loadingcategoria:false,
+      searchcategoria: "",
+      loadingcategoria: false,
       formerrors: [],
       loading: false,
       producto: {
@@ -116,9 +124,11 @@ export default {
         estado: true,
         precio: 0,
         stock: 0,
-        categoria_id:null,
+        categoria_id: null,
         categoria: {},
-        created_at: ""
+        created_at: "",
+        imagen:"",
+        imagen64:""
       },
       rulesproducto: {
         nombre: [(v) => !!v || "Campo requerido"],
@@ -135,6 +145,7 @@ export default {
       options: {},
       headers: [
         { text: "ID", value: "id", sortable: true },
+        { text: "Imagen", value: "imagen", sortable: false },
         { text: "nombre", value: "nombre" },
         { text: "precio", value: "precio" },
         { text: "stock", value: "stock" },
@@ -151,7 +162,7 @@ export default {
       },
       deep: true,
     },
-    searchcategoria (val) {
+    searchcategoria(val) {
       console.log(val);
       // Items have already been loaded
       if (this.itemscategoria.length > 0) return
@@ -164,9 +175,9 @@ export default {
       CategoriasDataService.getAll({
         per_page: -1,
         page: 1
-      }).then(({data}) => {
-          this.itemscategoria = data
-        })
+      }).then(({ data }) => {
+        this.itemscategoria = data
+      })
         .catch(err => {
           console.log(err)
         })
@@ -261,6 +272,7 @@ export default {
         return
       }
       this.loading = true;
+      this.cargarimagenbase64();
       ProductosDataService.create(this.producto)
         .then((response) => {
           this.$swal({
@@ -304,6 +316,7 @@ export default {
         return
       }
       this.loading = true;
+      this.cargarimagenbase64();
       ProductosDataService.update(this.producto.id, this.producto)
         .then((response) => {
           this.$swal({
@@ -355,7 +368,7 @@ export default {
         estado: true,
         precio: 0,
         stock: 0,
-        categoria_id:null,  
+        categoria_id: null,
         categoria: {},
         created_at: ""
       };
@@ -363,11 +376,46 @@ export default {
     editItem(item) {
       this.dialog = true;
       this.producto = { ...item };
+      this.producto.imagen64 = "";
+      this.imagen = item.imagen;
       this.$refs.form.resetValidation();
     },
     cerrarmodal() {
       this.dialog = false;
       this.getDataFromApi();
+    },
+    onFileChange(file) {
+      try {
+        this.imagen = URL.createObjectURL(file);
+        this.imagenfile64 = file;
+        this.cargarimagenbase64();
+      } catch (error) {
+        this.cargarImagenPorDefecto();
+      }
+
+    },
+    cargarImagenPorDefecto() {
+      this.imagen = "";
+      this.imagenfile64 = null;
+    },
+    cargarimagenbase64() {
+      try {
+        if (this.imagenfile64) {
+          const reader = new FileReader();
+          reader.readAsDataURL(this.imagenfile64);
+          reader.onload = (event) => {
+            let base64Data = event.target.result
+            let txtfile = base64Data.split(',')[1];
+            this.producto.imagen64 = txtfile;
+          };
+        }
+      } catch (error) {
+        console.log(error);
+        this.cargarImagenPorDefecto();
+      }
+
+
+
     }
   },
   computed: {
