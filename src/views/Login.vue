@@ -16,9 +16,11 @@
                 required
               ></v-text-field>
               <v-text-field
+                :append-icon="showpass ? 'mdi-eye' : 'mdi-eye-off'"
+                @click:append="showpass = !showpass"
                 v-model="user.password"
                 label="Your password"
-                type="password"
+                :type="showpass ? 'text' : 'password'"
                 :rules="[v => !!v || 'Password is required']"
                 required
               ></v-text-field>
@@ -56,6 +58,7 @@ export default {
     name: "UserLogin",
     data() {
         return {
+            showpass: false,
             user: new User(),
             loading: false,
             message: '',

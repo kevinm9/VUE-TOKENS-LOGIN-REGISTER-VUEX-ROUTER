@@ -1,7 +1,6 @@
 <template>
   <v-container fluid>
 
-
     <v-dialog width="500px" persistent v-model="dialog" eager scrollable>
       <v-card>
         <v-toolbar dark color="primary">
@@ -63,8 +62,6 @@
       </v-card>
     </v-dialog>
 
-
-
     <v-card>
       <v-card-title>
         Productos
@@ -78,7 +75,9 @@
         :loading="loadingtable">
 
         <template v-slot:item.imagen="{ item }">
-          <v-img :src="item.imagen" alt="Imagen del producto" max-width="100" max-height="50"></v-img>
+          <v-img 
+          @error="cargarImagentablaPorDefecto(item)"
+          :src="item.imagen" alt="Imagen del producto" max-width="100" max-height="50"></v-img>
         </template>
 
         <template v-slot:item.stock="{ item }">
@@ -398,6 +397,9 @@ export default {
       this.imagen = "";
       this.imagenfile64 = null;
     },
+    cargarImagentablaPorDefecto(item) {
+      item.imagen = require('../assets/noproduct.png');
+    },
     cargarimagenbase64() {
       try {
         if (this.imagenfile64) {
@@ -411,11 +413,7 @@ export default {
         }
       } catch (error) {
         console.log(error);
-        this.cargarImagenPorDefecto();
-      }
-
-
-
+        this.cargarImagenPorDefecto();}
     }
   },
   computed: {
