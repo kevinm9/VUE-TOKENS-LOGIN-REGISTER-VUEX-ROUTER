@@ -7,6 +7,11 @@ Vue.use(VueRouter);
   mode: "history",
   routes: [
     {
+      path: '/test',
+      name: 'test',
+      component: () => import("../components/PosVenta.vue")
+    },
+    {
       path: '/facturas',
       name: 'facturas',
       component: () => import("../views/Facturas.vue")
