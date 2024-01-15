@@ -132,8 +132,15 @@ export default {
       rulesproducto: {
         nombre: [(v) => !!v || "Campo requerido"],
         estado: [(v) => !!v || "Campo requerido"],
-        precio: [(v) => !!v || "Campo requerido"],
-        stock: [(v) => !!v || "Campo requerido"],
+        precio: [
+          (v) => !!v || "Campo requerido",
+          (v) => /^([0-9]+([.][0-9]{1,2})?)?$/.test(v) || "Ingrese un valor numérico para el precio",
+          (v) => Number(v) >= 0 || "Ingrese un número positivo para el precio"
+        ],
+        stock: [
+          (v) => !!v || "Campo requerido",
+          (v) => Number.isInteger(Number(v)) && Number(v) >= 0 || "Ingrese un número entero positivo para el stock"
+        ],
         categoria: [(v) => !!v || "Campo requerido"],
       },
       dialog: false,
