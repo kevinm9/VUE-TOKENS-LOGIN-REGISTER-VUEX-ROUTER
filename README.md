@@ -9,8 +9,7 @@ ROUTER
 vuetify
 ```
 
-![alt text](https://raw.githubusercontent.com/kevinm9/VUE-TOKENS-LOGIN-REGISTER-VUEX-ROUTER/login/capturasvue.png)
-
+![alt text](https://github.com/kevinm9/VUE-TOKENS-LOGIN-REGISTER-VUEX-ROUTER/blob/main/capturasvue.png)
 
 ## Project setup
 ```
