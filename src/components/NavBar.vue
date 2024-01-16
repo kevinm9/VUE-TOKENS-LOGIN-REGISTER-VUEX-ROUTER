@@ -73,11 +73,25 @@
                     <v-list-item-title>categorias</v-list-item-title>
                 </v-list-item>
 
+                <v-list-item to="/clientes" link>
+                    <v-list-item-icon>
+                        <v-icon>mdi-account-multiple</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-title>clientes</v-list-item-title>
+                </v-list-item>
+
                 <v-list-item to="/facturas" link>
                     <v-list-item-icon>
                         <v-icon>mdi-file-document</v-icon>
                     </v-list-item-icon>
                     <v-list-item-title>Facturas</v-list-item-title>
+                </v-list-item>
+
+                <v-list-item to="/posfactura" link>
+                    <v-list-item-icon>
+                        <v-icon>mdi-cash-register</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-title>POS - Facturacion</v-list-item-title>
                 </v-list-item>
 
                 <v-list-item to="/shop" link>
